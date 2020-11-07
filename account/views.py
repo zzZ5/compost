@@ -8,6 +8,16 @@ from django.conf import settings
 
 
 def _hash_code(s, salt='zzZ5'):
+    """
+    加密字符串
+
+    Parameter:
+        s(string): 需要加密的字符串
+        salt(string): 加密中加的"盐分"
+
+    Return:
+        string: 加密后的256位字符串
+    """
     h = hashlib.sha256()
     s += salt
     h.update(s.encode())
@@ -15,6 +25,15 @@ def _hash_code(s, salt='zzZ5'):
 
 
 def _make_confirm_string(user):
+    """
+    创建确认码
+
+    Parameter:
+        user(models.User): 确认码绑定的用户
+
+    Return:
+        string: 该用户的确认码
+    """
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     code = _hash_code(user.username, now)
     ConfirmString.objects.create(code=code, user=user,)
@@ -22,6 +41,15 @@ def _make_confirm_string(user):
 
 
 def _send_email(email, code):
+    """
+    发送确认邮箱邮件
+
+    Parameter:
+        email(string): 确认码绑定的用户
+
+    Return:
+        None
+    """
     from django.core.mail import EmailMultiAlternatives
     subject = '来自苏州有机循环研究院的注册确认邮件'
     text_content = '''感谢注册账号，这里是苏州有机循环研究院堆肥站点，专注于堆肥！\
@@ -39,6 +67,9 @@ def _send_email(email, code):
 
 
 def user_confirm(request):
+    """
+    邮箱确认界面
+    """
     code = request.GET.get('code', None)
     message = ''
     try:
@@ -47,7 +78,9 @@ def user_confirm(request):
         message = '无效的确认请求!'
     created_time = confirm.created_time
     now = datetime.datetime.now()
+
     if now > created_time + datetime.timedelta(settings.CONFIRM_DAYS):
+        # 确认邮件是否过期，如果过期便删除账号，让用户重新注册
         confirm.user.delete()
         message = '您的邮件已经过期！请重新注册!'
     else:
@@ -60,21 +93,19 @@ def user_confirm(request):
 
 
 def index(request):
+    """
+    账户信息页面
+    """
     if not request.session.get('is_login', None):
-        return redirect('/login/')
+        return redirect('/account/login/')
     content = {'session': request.session}
     return render(request, 'account/index.html', content)
 
 
-def changepassword(request):
-    if not request.session.get('is_login', None):
-        return redirect('/login/')
-    if request.method == "POST":
-        name = request.POST.get('name')
-        password = request.POST.get('password')
-
-
 def login(request):
+    """
+    登陆界面
+    """
     message = ""
     if request.session.get('is_login', None):  # 不允许重复登录
         return redirect('/account/')
@@ -104,13 +135,69 @@ def login(request):
 
 
 def logout(request):
+    """
+    登出命令
+    """
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
     request.session.flush()
     return redirect("/account/login/")
 
 
+def _makesure_password(pd1, pd2):
+    """
+    确认两个密码一样且符合规格
+
+    Parameter:
+        pd1(string): 密码1
+        pd2(string): 密码2
+
+    Return:
+        string: 返回提示信息，如果密码正确则返回空
+    """
+    message = ""
+    if pd1 != pd2:
+        message = '两次输入的密码不一样！'
+    elif len(pd1) < 8:
+        message = '密码长度不能小于8位！'
+    elif len(pd1) > 16:
+        message = '密码长度不能大于16位！'
+    return message
+
+
+def changepassword(request):
+    """
+    更改账户密码界面
+    """
+    if not request.session.get('is_login', None):
+        return redirect('/account/login/')
+    message = ''
+    if request.method == "POST":
+        id = request.session.get('user_id', None)
+        password = request.POST.get('password')
+        newpassword1 = request.POST.get('newpassword1')
+        newpassword2 = request.POST.get('newpassword2')
+        user = User.objects.get(pk=id)
+        if user.password != _hash_code(password):
+            message = '密码错误！'
+        elif _makesure_password(newpassword1, newpassword2):
+            message = _makesure_password(newpassword1, newpassword2)
+        else:
+            user.password = _hash_code(newpassword1)
+            user.save()
+            request.session.flush()
+            message = '密码已修改，请重新登陆'
+            content = {'message': message}
+            return render(request, 'account/login.html', content)
+
+    content = {'message': message}
+    return render(request, 'account/changepassword.html', content)
+
+
 def register(request):
+    """
+    注册账号界面
+    """
     message = ""
     if request.session.get('is_login', None):
         return redirect('/account/')
@@ -121,12 +208,8 @@ def register(request):
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         message = "请检查填写的内容！"
-        if password1 != password2:
-            message = '两次输入的密码不同！'
-        elif len(password1) < 8:
-            message = '密码长度不能小于8位！'
-        elif len(password1) > 16:
-            message = '密码长度不能大于16位！'
+        if _makesure_password(password1, password2):
+            message = _makesure_password(password1, password2)
         else:
             same_username = User.objects.filter(username=username)
             same_email = User.objects.filter(email=email)
