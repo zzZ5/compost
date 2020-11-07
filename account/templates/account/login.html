@@ -1,0 +1,33 @@
+{% extends "account\includes\base.html" %}
+{% block account %}
+<div class="container  text-center" style="display: flex;">    
+    <div class="card shadow-sm mx-auto rounded" style="margin-top: 15%; width: 380px;">
+      <div class="card-body">
+        {% if message %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        <h3 class="card-title">欢迎登陆</h3>
+        <form action="{% url 'account:login' %}", method="POST">
+        {% csrf_token %}
+          <div class="form-group">
+            <label for="InputEmail1">用户名或邮箱地址</label>
+            <input name="name" type="text" class="form-control" id="InputEmail1" aria-describedby="emailHelp">
+          </div>
+          <div class="form-group">
+            <label for="InputPassword">密码</label>
+            <input name="password" type="password" class="form-control" id="InputPassword">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">登陆</button>
+        </form>
+      </div>
+      <div class="card-footer"> 
+        <a href="{% url 'account:register' %}"><small class="text-muted">没有账号？点击注册</small></a>
+      </div>
+    </div>
+</div>
+{% endblock account %}

@@ -1,0 +1,26 @@
+{% extends "account\includes\base.html" %}
+{% block account %}
+<div class="container  text-center" style="display: flex;">    
+    <div class="card shadow-sm mx-auto rounded" style="margin-top: 15%; width: 380px;">
+      <div class="card-body">
+        {% if message %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endif %}
+        
+        <h3 class="card-title">我的账号</h3>
+        <label>用户名</label>
+        <h4 class="bg-light">{{ session.username }}</h4>
+        <label>邮箱</label>
+        <h4 class="bg-light">{{ session.email }}</h4>
+        <div class="card-footer"> 
+            <a href="{% url 'account:changepassword' %}"><small class="text-muted">修改密码</small></a>
+        </div>
+      </div>
+    </div>
+</div> 
+{% endblock account %}
