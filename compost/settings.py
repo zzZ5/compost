@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'account.apps.AccountConfig',
+    'polls.apps.PollsConfig',
     'captcha'
 ]
 
@@ -131,13 +132,13 @@ USE_TZ = False
 # 设置静态文件目录和名称
 STATIC_URL = '/static/'
 # 加入下面代码
-STATIC_ROOT = os.path.join(BASE_DIR,"static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 # 这个是设置静态文件夹目录的路径
 STATICFILES_FINDERS = (
 
-"django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.FileSystemFinder",
 
-"django.contrib.staticfiles.finders.AppDirectoriesFinder"
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder"
 
 )
 # 设置文件上传路径，图片上传、文件上传都会存放在此目录里

@@ -190,7 +190,7 @@ def changepassword(request):
             content = {'message': message}
             return render(request, 'account/login.html', content)
 
-    content = {'message': message}
+    content = {'message': message, 'session': request.session}
     return render(request, 'account/changepassword.html', content)
 
 
