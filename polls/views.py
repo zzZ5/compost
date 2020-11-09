@@ -6,3 +6,9 @@ def index(request):
         return redirect('/account/login/')
     content = {'session': request.session}
     return render(request, 'polls/index.html', content)
+
+
+def about(request):
+    detail = {'title': '关于我们', 'content': '测试文本'}
+    content = {'detail': detail, 'session': request.session}
+    return render(request, 'polls/about.html', content)
