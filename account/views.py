@@ -5,6 +5,7 @@ import hashlib
 from account import forms
 from account.models import User, ConfirmString
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 
 
 def _hash_code(s, salt='zzZ5'):
@@ -50,7 +51,6 @@ def _send_email(email, code):
     Return:
         None
     """
-    from django.core.mail import EmailMultiAlternatives
     subject = '来自苏州有机循环研究院的注册确认邮件'
     text_content = '''感谢注册账号，这里是苏州有机循环研究院堆肥站点，专注于堆肥！\
                     如果你看到这条消息，说明你的邮箱服务器不提供HTML链接功能，请联系管理员！'''
@@ -59,7 +59,7 @@ def _send_email(email, code):
                     完成注册！</p>
                     <p>请点击链接完成注册确认！</p>
                     <p>此链接有效期为{}天！</p>
-                    '''.format('127.0.0.1:8000', code, settings.CONFIRM_DAYS)
+                    '''.format('81.70.97.150:80', code, settings.CONFIRM_DAYS)
     msg = EmailMultiAlternatives(
         subject, text_content, settings.EMAIL_HOST_USER, [email])
     msg.attach_alternative(html_content, "text/html")
