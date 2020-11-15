@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['*']
 # 邮件配置
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sina.com'
-EMAIL_PORT = 25
+EMAIL_PORT = 465
 EMAIL_HOST_USER = 'baoju_liu@sina.com'
 EMAIL_HOST_PASSWORD = '54e645b557d05976'
 # 注册有效期天数
