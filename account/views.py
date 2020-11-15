@@ -5,7 +5,6 @@ import hashlib
 from account import forms
 from account.models import User, ConfirmString
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
 
 
 def _hash_code(s, salt='zzZ5'):
@@ -51,6 +50,7 @@ def _send_email(email, code):
     Return:
         None
     """
+    from django.core.mail import EmailMultiAlternatives
     subject = '来自苏州有机循环研究院的注册确认邮件'
     text_content = '''感谢注册账号，这里是苏州有机循环研究院堆肥站点，专注于堆肥！\
                     如果你看到这条消息，说明你的邮箱服务器不提供HTML链接功能，请联系管理员！'''
