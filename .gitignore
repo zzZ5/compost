@@ -1,4 +1,3 @@
 *.pyc
 .vscode
-uwsgi.ini
 db.sqlite3
