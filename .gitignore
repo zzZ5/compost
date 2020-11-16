@@ -1,4 +1,4 @@
 *.pyc
 .vscode
 db.sqlite3
-/compost/settings.py
+compost/settings.py
