@@ -33,7 +33,7 @@ EMAIL_HOST = 'smtp.qq.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'baoju_liu@foxmail.com'
-EMAIL_HOST_PASSWORD = 'ntwtvpnulietfihf'
+EMAIL_HOST_PASSWORD = ''
 # 注册有效期天数
 CONFIRM_DAYS = 7
 
@@ -97,7 +97,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 'NAME': 'test_compost',  #   你的数据库名称
         'USER': 'zzZ5',  #   你的数据库用户名
-        'PASSWORD': 'L05b03j__',  #   你的数据库密码
+        'PASSWORD': '',  #   你的数据库密码
         'HOST': 'cdb-jh4avzxk.cd.tencentcdb.com',  #   你的数据库主机，留空默认为localhost
         'PORT': '10059',  #   你的数据库端口
     }
