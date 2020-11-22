@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'iev23m8i6q^q#*vw-6uy=n@5g$fe!76w#_urr0dp@2gn^=(^o_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -33,9 +33,7 @@ EMAIL_HOST = 'smtp.qq.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'baoju_liu@foxmail.com'
-EMAIL_HOST_PASSWORD = 'ntwtvpnulietfihf'
-# EMAIL_HOST_USER = 'baoju_liu@sina.com'
-# EMAIL_HOST_PASSWORD = '54e645b557d05976'
+EMAIL_HOST_PASSWORD = ''
 # 注册有效期天数
 CONFIRM_DAYS = 7
 
@@ -88,10 +86,20 @@ WSGI_APPLICATION = 'compost.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql', 'NAME': 'test_compost',  #   你的数据库名称
+        'USER': '',  #   你的数据库用户名
+        'PASSWORD': '',  #   你的数据库密码
+        'HOST': 'cdb-jh4avzxk.cd.tencentcdb.com',  #   你的数据库主机，留空默认为localhost
+        'PORT': '10059',  #   你的数据库端口
     }
 }
 

@@ -88,7 +88,7 @@ def user_confirm(request):
         confirm.user.save()
         confirm.delete()
         message = '感谢确认，请使用账户登录！'
-    content = {'message': message}
+    content = {'message': message, 'page_confirm': True}
     return render(request, 'account/confirm.html', content)
 
 
@@ -98,7 +98,7 @@ def index(request):
     """
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
-    content = {'session': request.session}
+    content = {'session': request.session, 'page_myaccount': True}
     return render(request, 'account/index.html', content)
 
 
@@ -130,7 +130,7 @@ def login(request):
                     return redirect('/account/')
                 else:
                     message = '密码错误！'
-    content = {'message': message}
+    content = {'message': message, 'page_login': True}
     return render(request, 'account/login.html', content)
 
 
@@ -190,7 +190,8 @@ def changepassword(request):
             content = {'message': message}
             return render(request, 'account/login.html', content)
 
-    content = {'message': message, 'session': request.session}
+    content = {'message': message,
+               'session': request.session, 'page_myaccount': True}
     return render(request, 'account/changepassword.html', content)
 
 
@@ -229,6 +230,7 @@ def register(request):
                 return render(request, 'account/login.html', {'message': message})
 
     captcha_form = forms.captchaForm(request.POST)
-    content = {'captcha_form': captcha_form, 'message': message}
+    content = {'captcha_form': captcha_form,
+               'message': message, 'page_register': True}
 
     return render(request, 'account/register.html', content)
