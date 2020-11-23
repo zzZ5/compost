@@ -127,7 +127,7 @@ def login(request):
                     request.session['user_id'] = user.id
                     request.session['username'] = user.username
                     request.session['email'] = user.email
-                    return redirect('/account/')
+                    return redirect('/')
                 else:
                     message = '密码错误！'
     content = {'message': message, 'page_login': True}
