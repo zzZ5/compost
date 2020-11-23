@@ -13,3 +13,19 @@ def about(request):
     content = {'detail': detail,
                'session': request.session, 'page_about': True}
     return render(request, 'polls/about.html', content)
+
+
+def all_equipment(request):
+    return
+
+
+def my_equipment(request):
+    return
+
+
+def list_history(request):
+    return
+
+
+def add_equipment(request):
+    return

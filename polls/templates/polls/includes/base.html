@@ -4,9 +4,8 @@
     <title>Compost Lab</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://at.alicdn.com/t/font_2210058_zgclu5c6yy.css">
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://at.alicdn.com/t/font_2210058_ko39w42vvqr.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_2210058_pst2ppw2yi.css">
     {% load static %}
     <link rel="stylesheet" href="{% static 'polls/css/style.css' %}"> 
     {% block link %} {% endblock link %}
@@ -19,14 +18,10 @@
       <div class="page-content">
         <div class="row">
           <div class="col-md-2">
-            {% block list_operation %} {% endblock list_operation %}
+              {% block list_operation %} {% endblock list_operation %}
           </div>
-          <div class="col-md-8">
-            {% block account %} {% endblock account %}
+          <div class="col-md-10">
             {% block show_content %} {% endblock show_content %}         
-          </div>
-          <div class="col-md-8">
-            {% block list_history %} {% endblock list_history %}
           </div>
         </div>
       </div>  
