@@ -1,7 +1,12 @@
 {% extends "polls/includes/base.html" %}
-{% block content %}
+
+{% block list_operation %}
+{% include "polls/includes/list_operation.html" %}
+{% endblock list_operation %}
+
+{% block show_content %}
 <div class="container text-center">
     <h2>{{ detail.title }}</h2>
     <p>{{ detail.content }}</p>
 </div>
-{% endblock content %}
+{% endblock show_content %}

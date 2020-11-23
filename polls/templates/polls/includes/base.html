@@ -17,6 +17,9 @@
       {% endblock navbar %}
       <div class="page-content">
         <div class="row">
+          {% block account %} {% endblock account %}
+        </div>
+        <div class="row">
           <div class="col-md-2">
               {% block list_operation %} {% endblock list_operation %}
           </div>
