@@ -1,2 +1,2 @@
 django-simple-captcha>=0.5.12
-PyMySQL>=0.9.3
+mysqlclient>=2.0.1
