@@ -9,7 +9,7 @@
           </div>
     {% endif %}
     <h3 class="card-title">申请设备</h3>
-        <form action="{% url 'polls:add_equipment' %}", method="POST">
+        <form action="{% url 'polls:create_equipment' %}", method="POST">
         {% csrf_token %}
           <div class="form-group">
             <label for="InputName">设备名</label>

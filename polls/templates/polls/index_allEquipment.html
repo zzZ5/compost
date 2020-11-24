@@ -12,4 +12,7 @@
 {% include "polls/includes/list_history.html" %}
 {% endblock list_history %}
 
- 
+{% block script %}
+{% load static %}
+<script src="{% static 'polls/js/addEquipment.js' %}"></script>
+{% endblock script %}

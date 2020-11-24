@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 import random
 import hashlib
 import time
@@ -114,7 +114,7 @@ def list_history(request):
     return
 
 
-def add_equipment(request):
+def create_equipment(request):
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
 
@@ -144,5 +144,13 @@ def add_equipment(request):
             _send_email(request.session.get('email', None), new_equipment)
             message = '申请成功，请检查邮箱是否收到邮件(若未收到邮件请联系管理员)。'
 
-    content = {'page_addEquipment': True, 'message': message}
-    return render(request, 'polls/index_addEquipment.html', content)
+    content = {'page_createEquipment': True, 'message': message}
+    return render(request, 'polls/index_createEquipment.html', content)
+
+
+def submit(request):
+    return
+
+
+def add_equipment(request):
+    return HttpResponse('ok')
