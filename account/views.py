@@ -7,6 +7,27 @@ from account.models import User, ConfirmString
 from django.conf import settings
 
 
+def _makesure_password(pd1, pd2):
+    """
+    确认两个密码一样且符合规格
+
+    Parameter:
+        pd1(string): 密码1
+        pd2(string): 密码2
+
+    Return:
+        string: 返回提示信息，如果密码正确则返回空
+    """
+    message = ""
+    if pd1 != pd2:
+        message = '两次输入的密码不一样！'
+    elif len(pd1) < 8:
+        message = '密码长度不能小于8位！'
+    elif len(pd1) > 16:
+        message = '密码长度不能大于16位！'
+    return message
+
+
 def _hash_code(s, salt='zzZ5'):
     """
     加密字符串
@@ -142,27 +163,6 @@ def logout(request):
         return redirect('/account/login/')
     request.session.flush()
     return redirect("/account/login/")
-
-
-def _makesure_password(pd1, pd2):
-    """
-    确认两个密码一样且符合规格
-
-    Parameter:
-        pd1(string): 密码1
-        pd2(string): 密码2
-
-    Return:
-        string: 返回提示信息，如果密码正确则返回空
-    """
-    message = ""
-    if pd1 != pd2:
-        message = '两次输入的密码不一样！'
-    elif len(pd1) < 8:
-        message = '密码长度不能小于8位！'
-    elif len(pd1) > 16:
-        message = '密码长度不能大于16位！'
-    return message
 
 
 def changepassword(request):

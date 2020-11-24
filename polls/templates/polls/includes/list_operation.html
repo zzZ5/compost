@@ -2,10 +2,10 @@
   <ul class="nav flex-column">
       <!-- Main menu -->
       <li {% if page_allEquipment %} class="current active" {% endif %}><a href="{% url 'polls:index' %}"><i class="icon iconfont iconshebeikongzhi"></i> 全部设备</a></li>
-      <li {% if page_myEquipment %} class="current" {% endif %}><a href="#"><i class="icon iconfont iconjiankongshebei"></i> 我的设备</a></li>
-      <li {% if page_listHistory %} class="current" {% endif %}><a href="#"><i class="icon iconfont iconcaozuojilu"></i> 操作记录</a></li>
-      <li {% if page_addEquipment %} class="current" {% endif %}><a href="#"><i class="icon iconfont iconjiatianjiakuangxuanduoxuan-8"></i> 新增设备</a></li>
-      <li {% if page_myaccount %} class="current" {% endif %}><a href="#"><i class="icon iconfont iconwodezhanghao"></i> 我的账号</a></li>
+      <li {% if page_myEquipment %} class="current" {% endif %}><a href="{% url 'polls:my_equipment' %}"><i class="icon iconfont iconjiankongshebei"></i> 我的设备</a></li>
+      <li {% if page_listHistory %} class="current" {% endif %}><a href="{% url 'polls:list_history' %}"><i class="icon iconfont iconcaozuojilu"></i> 操作记录</a></li>
+      <li {% if page_addEquipment %} class="current" {% endif %}><a href="{% url 'polls:add_equipment' %}"><i class="icon iconfont iconjiatianjiakuangxuanduoxuan-8"></i> 新增设备</a></li>
+      <li {% if page_myaccount %} class="current" {% endif %}><a href="{% url 'account:index' %}"><i class="icon iconfont iconwodezhanghao"></i> 我的账号</a></li>
       <li {% if page_about %} class="current" {% endif %}><a href="{% url 'polls:about' %}"><i class="icon iconfont iconguanyu"></i> 关于</a></li>
   </ul>
 </div>  

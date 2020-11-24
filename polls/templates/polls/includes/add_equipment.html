@@ -1,0 +1,26 @@
+<div class="card text-left">
+  <div class="card-body">
+    {% if message %}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+    {% endif %}
+    <h3 class="card-title">申请设备</h3>
+        <form action="{% url 'polls:add_equipment' %}", method="POST">
+        {% csrf_token %}
+          <div class="form-group">
+            <label for="InputName">设备名</label>
+            <input name="name" type="text" class="col-md-6 form-control" id="InputName">
+          </div>
+          <div class="form-group">
+            <label for="InputDescript">描述</label>
+            <textarea name="descript" class="col-md-6 form-control" id="InputDescript" rows="5"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">申请</button>
+        </form>
+      </div>
+  </div>
+</div>

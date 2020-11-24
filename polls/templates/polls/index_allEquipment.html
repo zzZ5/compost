@@ -5,10 +5,11 @@
 {% endblock list_operation %}
 
 {% block show_content %}
-<div class="card">
-  <div class="card-body">
-    <h4 class="card-title">{{ detail.title }}</h4>
-    <p class="card-text">{{ detail.content }}</p>
-  </div>
-</div>
+{% include "polls/includes/all_equipment.html" %}
 {% endblock show_content %}
+
+{% block list_history %}
+{% include "polls/includes/list_history.html" %}
+{% endblock list_history %}
+
+ 
