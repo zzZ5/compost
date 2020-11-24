@@ -1,9 +1,10 @@
 <div class="card-columns">
+  {% for equipment in equipments %}
     <div class="col">
         <div class="card">
             <div class="card-body">
-              <h5 class="card-title"><a href="#">设备test</a></h5>
-              <p class="card-text">测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据</p>
+              <h5 class="card-title"><a href="#">{{ equipment.name }}</a></h5>
+              <p class="card-text">{{ equipment.descript }}</p>
               <table class="table">
                 <thead>
                   <tr>
@@ -13,233 +14,25 @@
                   </tr>
                 </thead>
                 <tbody>
+                  {% for data in equipment.datas %}
                   <tr>
-                    <td>22.2</td>
-                    <td>摄氏度</td>
-                    <td>2020.11.23 16:37</td>
+                    <td>{{ data.value }}</td>
+                    <td>{{ data.descript }}</td>
+                    <td>{{ data.created_time }}</td>
                   </tr>
-                  <tr>
-                    <td>22.2</td>
-                    <td>摄氏度</td>
-                    <td>2020.11.23 16:36</td>
-                  </tr>
-                  <tr>
-                    <td>22.2</td>
-                    <td>摄氏度</td>
-                    <td>2020.11.23 16:35</td>
-                  </tr>
+                  {% endfor %}
                   <tr>
                     <td><a href="#">......</a></td>
                   </tr>
                 </tbody>
               </table>
             </div>
+            {% if equipment.interval %}
             <div class="card-footer">
-              <small class="text-muted">Last updated 3 mins ago</small>
+              <small class="text-muted">最后一次更新距现在{{ equipment.interval }}</small>
             </div>
+            {% endif %}
           </div>
     </div>
-
-    <div class="col">
-      <div class="card">
-          <div class="card-body">
-            <h5 class="card-title"><a href="#">设备test</a></h5>
-            <p class="card-text">测试用数据</p>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>数据</th>
-                  <th>描述</th>
-                  <th>时间</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>22.2</td>
-                  <td>摄氏度摄氏度摄氏度摄氏度摄氏度摄氏度摄氏度摄氏度摄氏度摄氏度摄氏度摄氏度</td>
-                  <td>2020.11.23 16:37</td>
-                </tr>
-                <tr>
-                  <td>22.2</td>
-                  <td>摄氏度</td>
-                  <td>2020.11.23 16:36</td>
-                </tr>
-                <tr>
-                  <td>22.2</td>
-                  <td>摄氏度</td>
-                  <td>2020.11.23 16:35</td>
-                </tr>
-                <tr>
-                  <td><a href="#">......</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="card-footer">
-            <small class="text-muted">Last updated 3 mins ago</small>
-          </div>
-        </div>
-  </div>
-
-  <div class="co">
-    <div class="card">
-        <div class="card-body">
-          <h5 class="card-title"><a href="#">设备test</a></h5>
-          <p class="card-text">测试用数据</p>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>数据</th>
-                <th>描述</th>
-                <th>时间</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>22.2</td>
-                <td>摄氏度</td>
-                <td>2020.11.23 16:37</td>
-              </tr>
-              <tr>
-                <td>22.2</td>
-                <td>摄氏度</td>
-                <td>2020.11.23 16:36</td>
-              </tr>
-              <tr>
-                <td>22.2</td>
-                <td>摄氏度</td>
-                <td>2020.11.23 16:35</td>
-              </tr>
-              <tr>
-                <td><a href="#">......</a></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted">Last updated 3 mins ago</small>
-        </div>
-      </div>
-</div>
-
-  <div class="col">
-    <div class="card">
-        <div class="card-body">
-          <h5 class="card-title"><a href="#">设备test</a></h5>
-          <p class="card-text">测试用数据</p>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>数据</th>
-                <th>描述</th>
-                <th>时间</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>22.2</td>
-                <td>摄氏度</td>
-                <td>2020.11.23 16:37</td>
-              </tr>
-              <tr>
-                <td>22.2</td>
-                <td>摄氏度</td>
-                <td>2020.11.23 16:36</td>
-              </tr>
-              <tr>
-                <td>22.2</td>
-                <td>摄氏度</td>
-                <td>2020.11.23 16:35</td>
-              </tr>
-              <tr>
-                <td><a href="#">......</a></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card-footer">
-          <small class="text-muted">Last updated 3 mins ago</small>
-        </div>
-      </div>
-</div>
-<div class="col">
-  <div class="card">
-      <div class="card-body">
-        <h5 class="card-title"><a href="#">设备test</a></h5>
-        <p class="card-text">测试用数据</p>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>数据</th>
-              <th>描述</th>
-              <th>时间</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>22.2</td>
-              <td>摄氏度</td>
-              <td>2020.11.23 16:37</td>
-            </tr>
-            <tr>
-              <td>22.2</td>
-              <td>摄氏度</td>
-              <td>2020.11.23 16:36</td>
-            </tr>
-            <tr>
-              <td>22.2</td>
-              <td>摄氏度</td>
-              <td>2020.11.23 16:35</td>
-            </tr>
-            <tr>
-              <td><a href="#">......</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card-footer">
-        <small class="text-muted">Last updated 3 mins ago</small>
-      </div>
-    </div>
-</div>
-<div class="col">
-  <div class="card">
-      <div class="card-body">
-        <h5 class="card-title"><a href="#">设备test</a></h5>
-        <p class="card-text">测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据测试用数据</p>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>数据</th>
-              <th>描述</th>
-              <th>时间</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>22.2</td>
-              <td>摄氏度</td>
-              <td>2020.11.23 16:37</td>
-            </tr>
-            <tr>
-              <td>22.2</td>
-              <td>摄氏度</td>
-              <td>2020.11.23 16:36</td>
-            </tr>
-            <tr>
-              <td>22.2</td>
-              <td>摄氏度</td>
-              <td>2020.11.23 16:35</td>
-            </tr>
-            <tr>
-              <td><a href="#">......</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card-footer">
-        <small class="text-muted">Last updated 3 mins ago</small>
-      </div>
-    </div>
-</div>
+    {% endfor %}
 </div>

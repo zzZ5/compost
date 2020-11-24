@@ -23,11 +23,11 @@ class Equipment(models.Model):
 class Data(models.Model):
     value = models.FloatField()
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
-    descript = models.CharField(max_length=256)
+    descript = models.CharField(max_length=256, blank=True)
     created_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.value
+        return "{}".format(self.value)
 
     class Meta:
         ordering = ["-created_time"]

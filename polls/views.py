@@ -4,6 +4,7 @@ import hashlib
 import time
 from django.conf import settings
 from polls.models import Equipment
+import datetime
 
 
 def _send_email(email, equipment):
@@ -59,10 +60,31 @@ def _get_random_secret_key(length=15, allowed_chars=None, secret_key=None):
     return ret
 
 
+def _get_equipment_info(equipment, data_num=3):
+    if data_num < 0:
+        datas = equipment.data_set.all()
+    else:
+        datas = equipment.data_set.all()[:data_num]
+    interval = ''
+    if datas[0]:
+        d1 = datas[0].created_time
+        d2 = datetime.datetime.now()
+        d = d2 - d1
+        days = d.days
+        mins = d.seconds % 60
+        hours = d.seconds // 3600
+        interval = '{}天{}小时{}分钟'.format(days, hours, mins)
+    info = {'name': equipment.name, 'descript': equipment.descript,
+            'datas': datas, 'interval': interval}
+    return info
+
+
 def index(request):
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
-    content = {'session': request.session,
+    equments = [_get_equipment_info(equipment)
+                for equipment in Equipment.objects.all()]
+    content = {'equipments': equments, 'session': request.session,
                'page_home': True, 'page_allEquipment': True}
     return render(request, 'polls/index.html', content)
 
@@ -75,7 +97,13 @@ def about(request):
 
 
 def all_equipment(request):
-    return
+    if not request.session.get('is_login', None):
+        return redirect('/account/login/')
+
+    equments = [_get_equipment_info(equipment)
+                for equipment in Equipment.objects.all()]
+    content = {'equipments': equments}
+    return render(request, 'polls/index_allEquipment.html', content)
 
 
 def my_equipment(request):
@@ -107,7 +135,11 @@ def add_equipment(request):
             new_equipment = Equipment()
             new_equipment.name = name
             new_equipment.descript = descript
-            new_equipment.key = _get_random_secret_key()
+            # 确保唯一key
+            key = _get_random_secret_key()
+            while Equipment.objects.filter(key=key):
+                key = _get_random_secret_key()
+            new_equipment.key = key
             new_equipment.save()
             _send_email(request.session.get('email', None), new_equipment)
             message = '申请成功，请检查邮箱是否收到邮件(若未收到邮件请联系管理员)。'
