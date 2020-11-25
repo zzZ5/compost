@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls'), name='account'),
     path('captcha/', include('captcha.urls'), name='captcha'),
-    path("favicon.ico/", RedirectView.as_view(url='static/favicon.ico')),
+    path("favicon.ico", RedirectView.as_view(url='static/favicon.ico')),
 ]
