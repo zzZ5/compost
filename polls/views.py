@@ -99,7 +99,7 @@ def index(request):
     equments = [_get_equipment_info(equipment, user)
                 for equipment in Equipment.objects.all()]
     content = {'equipments': equments, 'session': request.session,
-               'page_home': True, 'page_allEquipment': True}
+               'page_home': True, 'page_all_equipment': True}
     return render(request, 'polls/index.html', content)
 
 
@@ -118,16 +118,31 @@ def all_equipment(request):
     user = User.objects.get(username=username)
     equments = [_get_equipment_info(equipment, user)
                 for equipment in Equipment.objects.all()]
-    content = {'equipments': equments}
-    return render(request, 'polls/index_allEquipment.html', content)
+
+    content = {'equipments': equments, 'page_all_equipment': True}
+    return render(request, 'polls/page_all_equipment.html', content)
 
 
 def my_equipment(request):
-    return
+    if not request.session.get('is_login', None):
+        return redirect('/account/login/')
+
+    username = request.session.get('username', None)
+    user = User.objects.get(username=username)
+    equipments = user.equipment_set.all()
+    equments = [_get_equipment_info(equipment, user)
+                for equipment in equipments]
+
+    content = {'equipments': equments, 'page_my_equipment': True}
+    return render(request, 'polls/page_all_equipment.html', content)
 
 
 def list_history(request):
-    return
+    if not request.session.get('is_login', None):
+        return redirect('/account/login/')
+
+    content = {'session': request.session, 'page_list_history': True}
+    return render(request, 'polls/page_list_history.html', content)
 
 
 def create_equipment(request):
@@ -160,8 +175,8 @@ def create_equipment(request):
             _send_email(request.session.get('email', None), new_equipment)
             message = '申请成功，请检查邮箱是否收到邮件(若未收到邮件请联系管理员)。'
 
-    content = {'page_createEquipment': True, 'message': message}
-    return render(request, 'polls/index_createEquipment.html', content)
+    content = {'page_create_equipment': True, 'message': message}
+    return render(request, 'polls/page_create_equipment.html', content)
 
 
 def submit(request):
