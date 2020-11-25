@@ -4,6 +4,7 @@ import hashlib
 import time
 from django.conf import settings
 from polls.models import Equipment
+from account.models import User
 import datetime
 
 
@@ -60,7 +61,17 @@ def _get_random_secret_key(length=15, allowed_chars=None, secret_key=None):
     return ret
 
 
-def _get_equipment_info(equipment, data_num=3):
+def _get_equipment_info(equipment, user, data_num=3):
+    """
+    获取设备信息
+    Parameter:
+        equipment(polls.models.Equipment): 要获取信息的设备
+        user(account.models.User): 当前用户，用来确认用户是否已有该设备
+        data_num(int, default: 3): 要获取设备的数据的个数，小于0则代表全部都要
+    Return:
+        dict: 设备的各项信息
+
+    """
     if data_num < 0:
         datas = equipment.data_set.all()
     else:
@@ -75,14 +86,17 @@ def _get_equipment_info(equipment, data_num=3):
         hours = d.seconds // 3600
         interval = '{}天{}小时{}分钟'.format(days, hours, mins)
     info = {'name': equipment.name, 'descript': equipment.descript,
-            'datas': datas, 'interval': interval}
+            'datas': datas, 'interval': interval, 'add': (not user in equipment.user.all())}
     return info
 
 
 def index(request):
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
-    equments = [_get_equipment_info(equipment)
+
+    username = request.session.get('username', None)
+    user = User.objects.get(username=username)
+    equments = [_get_equipment_info(equipment, user)
                 for equipment in Equipment.objects.all()]
     content = {'equipments': equments, 'session': request.session,
                'page_home': True, 'page_allEquipment': True}
@@ -100,7 +114,9 @@ def all_equipment(request):
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
 
-    equments = [_get_equipment_info(equipment)
+    username = request.session.get('username', None)
+    user = User.objects.get(username=username)
+    equments = [_get_equipment_info(equipment, user)
                 for equipment in Equipment.objects.all()]
     content = {'equipments': equments}
     return render(request, 'polls/index_allEquipment.html', content)
@@ -122,7 +138,7 @@ def create_equipment(request):
     if request.method == "POST":
         name = request.POST.get('name')
         descript = request.POST.get('descript')
-        same_name = Equipment.objects.filter(name=name)
+        same_name = Equipment.objects.get(name=name)
         if same_name:
             message = '设备名已经存在!'
         elif not name:
@@ -137,7 +153,7 @@ def create_equipment(request):
             new_equipment.descript = descript
             # 确保唯一key
             key = _get_random_secret_key()
-            while Equipment.objects.filter(key=key):
+            while Equipment.objects.get(key=key):
                 key = _get_random_secret_key()
             new_equipment.key = key
             new_equipment.save()
@@ -153,4 +169,39 @@ def submit(request):
 
 
 def add_equipment(request):
-    return HttpResponse('ok')
+    if not request.session.get('is_login', None):
+        return redirect('/account/login/')
+
+    message = ''
+    if request.method == "GET":
+        name = request.GET.get('name')
+        username = request.session.get('username', None)
+        equipment = Equipment.objects.get(name=name)
+        user = User.objects.get(username=username)
+        action = request.GET.get('action')
+        if not equipment:
+            # 101错误为找不到该设备
+            message = '101'
+        elif not user:
+            # 102错误为找不到账号
+            message = '102'
+
+        elif action == 'add':
+            if user in equipment.user.all():
+                # 103错误为该账号已在设备中
+                message = '103'
+            else:
+                equipment.user.add(user)
+                message = 'ok'
+        elif action == 'remove':
+            if not user in equipment.user.all():
+                # 104错误为该账号不在设备中
+                message = '104'
+            else:
+                equipment.user.remove(user)
+                message = 'ok'
+        else:
+            # 104错误为不明action
+            message = '105'
+
+    return HttpResponse(message)

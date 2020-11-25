@@ -10,5 +10,5 @@ urlpatterns = [
     path('createEquipment/', views.create_equipment, name='create_equipment'),
     path('listHistory/', views.list_history, name='list_history'),
     path('submit/', views.submit, name='submit'),
-    path('addEquipment/', views.add_equipment, name='add_equipment')
+    path('addEquipment/', views.add_equipment, name='add_equipment'),
 ]
