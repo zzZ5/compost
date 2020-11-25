@@ -222,7 +222,7 @@ def add_equipment(request):
                 equipment.user.remove(user)
                 message = 'ok'
         else:
-            # 104错误为不明action
+            # 105错误为不明action
             message = '105'
 
     return HttpResponse(message)
