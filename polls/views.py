@@ -77,7 +77,7 @@ def _get_equipment_info(equipment, user, data_num=3):
     else:
         datas = equipment.data_set.all()[:data_num]
     interval = ''
-    if datas[0]:
+    if datas:
         d1 = datas[0].created_time
         d2 = datetime.datetime.now()
         d = d2 - d1
@@ -95,7 +95,8 @@ def index(request):
         return redirect('/account/login/')
 
     username = request.session.get('username', None)
-    user = User.objects.get(username=username)
+    user = User.objects.filter(username=username)[
+        0] if User.objects.filter(username=username) else None
     equments = [_get_equipment_info(equipment, user)
                 for equipment in Equipment.objects.all()]
     content = {'equipments': equments, 'session': request.session,
@@ -115,7 +116,8 @@ def all_equipment(request):
         return redirect('/account/login/')
 
     username = request.session.get('username', None)
-    user = User.objects.get(username=username)
+    user = User.objects.filter(username=username)[
+        0] if User.objects.filter(username=username) else None
     equments = [_get_equipment_info(equipment, user)
                 for equipment in Equipment.objects.all()]
 
@@ -128,7 +130,8 @@ def my_equipment(request):
         return redirect('/account/login/')
 
     username = request.session.get('username', None)
-    user = User.objects.get(username=username)
+    user = User.objects.filter(username=username)[
+        0] if User.objects.filter(username=username) else None
     equipments = user.equipment_set.all()
     equments = [_get_equipment_info(equipment, user)
                 for equipment in equipments]
@@ -153,7 +156,8 @@ def create_equipment(request):
     if request.method == "POST":
         name = request.POST.get('name')
         descript = request.POST.get('descript')
-        same_name = Equipment.objects.get(name=name)
+        same_name = Equipment.objects.filter(
+            name=name)[0] if Equipment.objects.filter(name=name) else None
         if same_name:
             message = '设备名已经存在!'
         elif not name:
@@ -168,7 +172,7 @@ def create_equipment(request):
             new_equipment.descript = descript
             # 确保唯一key
             key = _get_random_secret_key()
-            while Equipment.objects.get(key=key):
+            while Equipment.objects.filter(key=key):
                 key = _get_random_secret_key()
             new_equipment.key = key
             new_equipment.save()
@@ -191,8 +195,10 @@ def add_equipment(request):
     if request.method == "GET":
         name = request.GET.get('name')
         username = request.session.get('username', None)
-        equipment = Equipment.objects.get(name=name)
-        user = User.objects.get(username=username)
+        equipment = Equipment.objects.filter(
+            name=name)[0] if Equipment.objects.filter(name=name) else None
+        user = User.objects.filter(username=username)[
+            0] if User.objects.filter(username=username) else None
         action = request.GET.get('action')
         if not equipment:
             # 101错误为找不到该设备
