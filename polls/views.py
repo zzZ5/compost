@@ -82,8 +82,8 @@ def _get_equipment_info(equipment, user, data_num=3):
         d2 = datetime.datetime.now()
         d = d2 - d1
         days = d.days
-        mins = d.seconds % 60
-        hours = d.seconds // 3600
+        mins = d.seconds // 60 % 60
+        hours = mins // 60
         interval = '{}天{}小时{}分钟'.format(days, hours, mins)
     info = {'name': equipment.name, 'descript': equipment.descript,
             'datas': datas, 'interval': interval, 'add': (not user in equipment.user.all())}
