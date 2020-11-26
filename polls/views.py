@@ -6,6 +6,9 @@ from django.conf import settings
 from polls.models import Equipment, Data
 from account.models import User
 import datetime
+from django.core.paginator import Paginator
+
+every_page_equipment = 9
 
 
 def _send_email(email, equipment):
@@ -96,18 +99,7 @@ def index(request):
     TODO:
         新的主页，而不是全部设备
     """
-
-    if not request.session.get('is_login', None):
-        return redirect('/account/login/')
-
-    username = request.session.get('username', None)
-    user = User.objects.filter(username=username)[
-        0] if User.objects.filter(username=username) else None
-    equments = [_get_equipment_info(equipment, user)
-                for equipment in Equipment.objects.all()]
-    content = {'equipments': equments, 'session': request.session,
-               'page_home': True, 'page_all_equipment': True}
-    return render(request, 'polls/index.html', content)
+    return all_equipment(request)
 
 
 def about(request):
@@ -124,10 +116,21 @@ def all_equipment(request):
     username = request.session.get('username', None)
     user = User.objects.filter(username=username)[
         0] if User.objects.filter(username=username) else None
-    equments = [_get_equipment_info(equipment, user)
-                for equipment in Equipment.objects.all()]
 
-    content = {'equipments': equments, 'page_all_equipment': True}
+    try:
+        current_page = int(request.GET.get(
+            "page")) if request.GET.get("page") else 1
+    except:
+        current_page = 1
+    paginator = Paginator(Equipment.objects.all(), every_page_equipment)
+    if current_page < 0 or current_page > paginator.num_pages:
+        current_page = 1
+
+    equments = [_get_equipment_info(equipment, user)
+                for equipment in paginator.page(current_page)]
+
+    content = {'equipments': equments, 'page_all_equipment': True,
+               'paginator': paginator.page(current_page)}
     return render(request, 'polls/page_all_equipment.html', content)
 
 
@@ -138,11 +141,22 @@ def my_equipment(request):
     username = request.session.get('username', None)
     user = User.objects.filter(username=username)[
         0] if User.objects.filter(username=username) else None
-    equipments = user.equipment_set.all()
+
+    try:
+        current_page = int(request.GET.get(
+            "page")) if request.GET.get("page") else 1
+    except:
+        current_page = 1
+    paginator = Paginator(user.equipment_set.all(), every_page_equipment)
+    if current_page < 0 or current_page > paginator.num_pages:
+        current_page = 1
+
+    equipments = paginator.page(current_page)
     equments = [_get_equipment_info(equipment, user)
                 for equipment in equipments]
 
-    content = {'equipments': equments, 'page_my_equipment': True}
+    content = {'equipments': equments, 'page_my_equipment': True,
+               'paginator': paginator.page(current_page)}
     return render(request, 'polls/page_all_equipment.html', content)
 
 
