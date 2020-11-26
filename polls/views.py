@@ -3,7 +3,7 @@ import random
 import hashlib
 import time
 from django.conf import settings
-from polls.models import Equipment
+from polls.models import Equipment, Data
 from account.models import User
 import datetime
 
@@ -70,7 +70,6 @@ def _get_equipment_info(equipment, user, data_num=3):
         data_num(int, default: 3): 要获取设备的数据的个数，小于0则代表全部都要
     Return:
         dict: 设备的各项信息
-
     """
     if data_num < 0:
         datas = equipment.data_set.all()
@@ -92,6 +91,12 @@ def _get_equipment_info(equipment, user, data_num=3):
 
 
 def index(request):
+    """
+    主页
+    TODO:
+        新的主页，而不是全部设备
+    """
+
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
 
@@ -185,7 +190,27 @@ def create_equipment(request):
 
 
 def submit(request):
-    return
+    message = ''
+    if request.method == "GET":
+        key = request.GET.get('key')
+        try:
+            value = float(request.GET.get('value'))
+        except:
+            # 错误101, 上传的数据为空或不为数字。
+            message = '101'
+            return HttpResponse(message)
+        descript = request.GET.get('descript')
+        equipment = Equipment.objects.filter(
+            key=key)[0] if Equipment.objects.filter(key=key) else None
+        if not equipment:
+            # 错误102, 找不到该key的设备。
+            message = '102'
+        else:
+            Data.objects.create(
+                value=value, equipment=equipment, descript=descript)
+            message = 'ok'
+
+    return HttpResponse(message)
 
 
 def add_equipment(request):
