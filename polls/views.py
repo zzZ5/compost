@@ -96,10 +96,9 @@ def _get_equipment_info(equipment, user, data_num=3):
 def index(request):
     """
     主页
-    TODO:
-        新的主页，而不是全部设备
     """
-    return all_equipment(request)
+    content = {'session': request.session, 'page_home': True}
+    return render(request, 'polls/index.html', content)
 
 
 def about(request):
