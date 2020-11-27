@@ -13,12 +13,17 @@ def index(request):
     return render(request, 'polls/index.html', content)
 
 
-def list_data(request, name):
+def list_data(request, id):
     """
     数据页面
     """
-    equipment = Equipment.objects.filter(
-        name=name)[0] if Equipment.objects.filter(name=name) else None
+
+    try:
+        equipment = Equipment.objects.filter(
+            id=int(id))[0] if Equipment.objects.filter(id=int(id)) else None
+    except:
+        return Http404
+
     if not equipment:
         return Http404
 

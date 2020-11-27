@@ -88,7 +88,7 @@ def _get_equipment_info(equipment, user, data_num=3):
         hours = mins // 60
         mins = mins % 60
         interval = '{}天{}小时{}分钟'.format(days, hours, mins)
-    info = {'name': equipment.name, 'descript': equipment.descript,
+    info = {'id': equipment.id, 'name': equipment.name, 'descript': equipment.descript,
             'datas': datas, 'interval': interval, 'add': (not user in equipment.user.all())}
     return info
 
