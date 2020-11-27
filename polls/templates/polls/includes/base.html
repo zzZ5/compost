@@ -19,17 +19,15 @@
       <div class="page-content">
         <div class="row">
           {% block account %} {% endblock account %}
-        </div>
-        <div class="row">
           <div class="col-md-2">
               {% block list_operation %} {% endblock list_operation %}
           </div>
           <div class="col-md-10">
-            {% block show_content %} {% endblock show_content %}         
+            {% block show_content %} {% endblock show_content %}            
+            {% block paginator %} {% endblock paginator %}      
           </div>
         </div>
       </div>  
-
       <footer>
         <div class="container">
         
@@ -39,7 +37,7 @@
            
         </div>
      </footer>
-
+      
     <script src="{% static 'polls/js/jquery.min.js' %}"></script>
     <script src="{% static 'polls/js/bootstrap.min.js' %}"></script>
     {% block script %} {% endblock script %}

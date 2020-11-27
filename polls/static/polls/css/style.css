@@ -1,16 +1,28 @@
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
     background-color: #f7f7f7;
     position: relative;
     margin: 0px;
-    font-size: 15px;
+    font-size: 12px;
     padding: 0px;
+    height: 100%;
+}
+
+.page-content {
+    min-height: 81.5%;
 }
 
 .page-content>.row {
     margin-left: 0px !important;
     margin-right: 0px !important;
     margin-top: 30px;
+    padding-bottom: -100px;
 }
 
 /* Footer */
@@ -21,13 +33,8 @@ footer {
     color: #fff;
     font-size: 14px;
     line-height: 25px;
-    /* padding: 10px 0px 10px 0px;
-    bottom: 0px; */
-    position: fixed;
-    left: 0px;
+    padding: 10px 0px 10px 0px;
     bottom: 0px;
-    width: 100%;
-    z-index: 9999;
 }
 
 footer a {

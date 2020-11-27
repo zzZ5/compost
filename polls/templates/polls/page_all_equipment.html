@@ -12,6 +12,10 @@
 {% include "polls/includes/list_history.html" %}
 {% endblock list_history %}
 
+{% block paginator %} 
+{% include "polls/includes/paginator.html" %}
+{% endblock paginator %} 
+
 {% block script %}
 {% load static %}
 <script src="{% static 'polls/js/addEquipment.js' %}"></script>
