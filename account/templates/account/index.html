@@ -1,26 +1,42 @@
 {% extends "polls/includes/base.html" %}
-{% block account %}
-<div class="container  text-center" style="display: flex;">    
-    <div class="card shadow-sm mx-auto rounded" style="margin-top: 13%; width: 380px;">
-      <div class="card-body">
-        {% if message %}
+
+{% block list_operation %}
+{% include "polls/includes/list_operation.html" %}
+{% endblock list_operation %}
+
+{% block show_content %}
+
+<div class="card text-left">
+  <div class="card-body">
+    {% if message %}
           <div class="alert alert-warning alert-dismissible fade show" role="alert">
-          {{ message }}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+    {% endif %}
+    <h3 class="card-title">我的账号</h3>
+    <form action="{% url 'account:index' %}", method="POST">
+      {% csrf_token %}
+      <div class="form-group row">
+        <label for="username" class="col-md-2 col-form-label">用户名：</label>
+        <div class="col-md-4">
+          <input name='username' type="text" class="form-control" id="username" value="{{ session.username }}">
         </div>
-        {% endif %}
-        
-        <h3 class="card-title">我的账号</h3>
-        <label>用户名</label>
-        <h4 class="bg-light">{{ session.username }}</h4>
-        <label>邮箱</label>
-        <h4 class="bg-light">{{ session.email }}</h4>
       </div>
-      <div class="card-footer mt-5"> 
-        <a href="{% url 'account:changepassword' %}"><small class="text-muted">修改密码</small></a>
-    </div>
-    </div>
-</div> 
-{% endblock account %}
+      <div class="form-group row">
+        <label for="email" class="col-md-2 col-form-label">邮箱：</label>
+        <div class="col-md-4">
+          <input name='email' type="email" class="form-control" id="email" value="{{ session.email }}">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-outline-primary btn-sm mt-2">保存</button>
+    </form>
+
+  </div>
+  <div class="card-footer mt-5"> 
+    <a href="{% url 'account:change_password' %}"><small class="text-muted">修改密码</small></a>
+  </div>
+</div>
+{% endblock show_content %}

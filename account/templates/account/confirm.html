@@ -1,6 +1,6 @@
 {% extends "polls/includes/base.html" %}
 {% block account %}
     <div class="container text-center">
-        <h3>{{ message }}</h3>
+        <a href="{% url 'account:login' %}"><h3>{{ message }}</h3></a>
     </div>
 {% endblock account %}

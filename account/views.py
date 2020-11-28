@@ -6,6 +6,8 @@ from account import forms
 from account.models import User, ConfirmString
 from django.conf import settings
 
+ip = '118.25.108.254:80'
+
 
 def _makesure_password(pd1, pd2):
     """
@@ -57,7 +59,7 @@ def _make_confirm_string(user):
     """
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     code = _hash_code(user.username, now)
-    ConfirmString.objects.create(code=code, user=user,)
+    ConfirmString.objects.create(code=code, user=user)
     return code
 
 
@@ -80,7 +82,7 @@ def _send_email(email, code):
                     完成注册！</p>
                     <p>请点击链接完成注册确认！</p>
                     <p>此链接有效期为{}天！</p>
-                    '''.format('81.70.97.150:80', code, settings.CONFIRM_DAYS)
+                    '''.format(ip, code, settings.CONFIRM_DAYS)
     msg = EmailMultiAlternatives(
         subject, text_content, settings.EMAIL_HOST_USER, [email])
     msg.attach_alternative(html_content, "text/html")
@@ -119,7 +121,37 @@ def index(request):
     """
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
-    content = {'session': request.session, 'page_myaccount': True}
+    message = ''
+    if request.method == 'POST':
+        uid = request.session.get('uid', None)
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        user = User.objects.get(pk=uid)
+        is_changed = True
+
+        if username != user.username:
+            if User.objects.filter(username=username):
+                message = '该用户名已存在'
+                is_changed = False
+        if email != user.email:
+            if User.objects.filter(email=email):
+                message = '该邮箱已经被注册了！'
+                is_changed = False
+            else:
+                code = _make_confirm_string(user)
+                user.confirmed = False
+                _send_email(email, code)
+                message = '邮箱已修改，请前往邮箱进行确认！'
+        if is_changed:
+            user.username = username
+            user.email = email
+            user.save()
+            request.session['username'] = user.username
+            request.session['email'] = user.email
+            message = '保存成功！' if message == '' else message
+
+    content = {'message': message,
+               'session': request.session, 'page_myaccount': True}
     return render(request, 'account/index.html', content)
 
 
@@ -145,7 +177,7 @@ def login(request):
                     message = '邮箱未验证！'
                 elif user.password == _hash_code(password):
                     request.session['is_login'] = True
-                    request.session['user_id'] = user.id
+                    request.session['uid'] = user.id
                     request.session['username'] = user.username
                     request.session['email'] = user.email
                     return redirect('/')
@@ -165,7 +197,7 @@ def logout(request):
     return redirect("/account/login/")
 
 
-def changepassword(request):
+def change_password(request):
     """
     更改账户密码界面
     """
@@ -173,11 +205,11 @@ def changepassword(request):
         return redirect('/account/login/')
     message = ''
     if request.method == "POST":
-        id = request.session.get('user_id', None)
+        uid = request.session.get('uid', None)
         password = request.POST.get('password')
         newpassword1 = request.POST.get('newpassword1')
         newpassword2 = request.POST.get('newpassword2')
-        user = User.objects.get(pk=id)
+        user = User.objects.get(pk=uid)
         if user.password != _hash_code(password):
             message = '密码错误！'
         elif _makesure_password(newpassword1, newpassword2):
