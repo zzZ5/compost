@@ -128,7 +128,7 @@ def all_equipment(request):
     equments = [_get_equipment_info(equipment, user)
                 for equipment in paginator.page(current_page)]
 
-    content = {'equipments': equments, 'page_all_equipment': True,
+    content = {'session': request.session, 'equipments': equments, 'page_all_equipment': True,
                'paginator': paginator.page(current_page)}
     return render(request, 'polls/page_all_equipment.html', content)
 
@@ -154,7 +154,7 @@ def my_equipment(request):
     equments = [_get_equipment_info(equipment, user)
                 for equipment in equipments]
 
-    content = {'equipments': equments, 'page_my_equipment': True,
+    content = {'session': request.session, 'equipments': equments, 'page_my_equipment': True,
                'paginator': paginator.page(current_page)}
     return render(request, 'polls/page_all_equipment.html', content)
 
@@ -198,7 +198,8 @@ def create_equipment(request):
             _send_email(request.session.get('email', None), new_equipment)
             message = '申请成功，请检查邮箱是否收到邮件(若未收到邮件请联系管理员)。'
 
-    content = {'page_create_equipment': True, 'message': message}
+    content = {'session': request.session,
+               'page_create_equipment': True, 'message': message}
     return render(request, 'polls/page_create_equipment.html', content)
 
 
