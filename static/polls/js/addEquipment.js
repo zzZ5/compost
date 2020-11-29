@@ -3,7 +3,7 @@ $(".addEquipment").click(function (){
     var add_equipment = $(this);
     var data = {name:add_equipment.attr("name")};
     add_equipment.hide()
-    $('.' + data["name"]).show()
+    $('#' + data["name"]).show()
     if (add_equipment.hasClass('iconjian1')){
         data["action"] = 'remove'
     } else {
@@ -31,7 +31,7 @@ $(".addEquipment").click(function (){
             }else {
                 alert("error: " + result['Code'] + '\n' + result['Message']);
             }
-            $('.' + data["name"]).hide()
+            $('#' + data["name"]).hide()
             add_equipment.show()
         },
         error: function (result){
