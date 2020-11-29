@@ -9,9 +9,47 @@
     <div class="col-md-6">
         {% include "equipment/includes/equipment_info.html" %}
     </div>
+    <div class="col-md-6" >
+        <div class="card w-100" style="height: 100%;" id="line-chart">
+        </div>
+    </div>
 </div>
+        
 {% endblock show_content %}
 
 {% block list_history %}
 {% include "polls/includes/list_history.html" %}
 {% endblock list_history %}
+
+{% block script %}
+{% load static %}
+<script src="{% static 'equipment/js/echarts.min.js' %}"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var line_chart = echarts.init(document.getElementById('line-chart'));
+    // 使用刚指定的配置项和数据显示图表。
+    line_chart.setOption({{ linechart_data|safe }});
+
+    $("#button_modify_equipment").click(function (){
+    console.log("click");
+    var message_modify_equipment= $("#message_modify_equipment")
+    $.ajax({
+        url: "{% url 'equipment:modify_equipment' equipment.id %}",
+        method: 'GET',
+        dataType: 'JSON',
+        data: $("#form_modify_equipment").serialize(),
+        success:function (result, status) {
+            console.log(result);
+            if (result['Code'] == 'ok'){
+                message_modify_equipment.show().delay(1000).hide(500)
+            }else {
+                alert("error: " + result['Code'] + '\n' + result['Message']);
+            }
+        },
+        error: function (result){
+            alert("Data transmission error！");
+        }
+        });
+    });
+</script>
+{% endblock script %}

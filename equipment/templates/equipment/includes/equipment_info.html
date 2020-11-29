@@ -1,17 +1,14 @@
 
 <div class="card text-left">
     <div class="card-body">
-      {% if message %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-      {% endif %}
-      <h3 class="card-title mb-2">设备信息</h3>
-      <form action="{% url 'equipment:index' equipment.id %}", method="POST">
-        {% csrf_token %}
+      <div  id="message_modify_equipment" style="display: none;" class="alert alert-warning alert-dismissible fade show" role="alert">
+        保存成功！
+        <button type="button" class="close" onclick="$('#message_modify_equipment').hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <h3 class="card-title mb-5">设备信息</h3>
+      <form id="form_modify_equipment">
         <div class="form-group row">
           <label for="name" class="col-md-2 col-form-label">设备名：</label>
             <div class="col-md-6">
@@ -24,7 +21,7 @@
             <textarea name="descript" class="form-control" id="descript" rows="5">{{ equipment.descript }}</textarea>
           </div>
         </div>
-        <button type="submit" class="btn btn-outline-primary btn-sm mt-2">保存</button>
+        <button type="button" id="button_modify_equipment" class="btn btn-outline-primary btn-sm mt-2">保存</button>
       </form>
   
     </div>

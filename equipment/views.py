@@ -5,6 +5,9 @@ import csv
 from django.http import StreamingHttpResponse
 import codecs
 import time
+from pyecharts.charts import Line
+import pyecharts.options as opts
+import json
 
 every_page_data = 100
 
@@ -22,26 +25,69 @@ def index(request, id):
     if not equipment:
         return Http404
 
-    message = ''
-    if request.method == 'POST':
-        name = request.POST.get('name', None)
-        descript = request.POST.get('descript')
-        is_changed = True
+    datas = equipment.data_set.all()
+    dates = list(data.created_time.strftime('%Y-%m-%d %H:%M:%S')
+                 for data in datas)
+    values = list(data.value for data in datas)
+    line = Line()
+    line.add_xaxis(dates)
+    line.add_yaxis(equipment.name, values, symbol_size=5,
+                   is_hover_animation=False,
+                   label_opts=opts.LabelOpts(is_show=False),
+                   linestyle_opts=opts.LineStyleOpts(width=1.5),
+                   is_smooth=True)
+    line.set_global_opts(
+        toolbox_opts=opts.ToolboxOpts(True,   feature={
+            "dataZoom": {"yAxisIndex": "none"},
+            "restore": {},
+            "saveAsImage": {},
+            "dataView": {}
 
+        },),
+        yaxis_opts=opts.AxisOpts(name=''),
+        tooltip_opts=opts.TooltipOpts(True, trigger="axis"),
+        datazoom_opts=opts.DataZoomOpts(True, range_start=0, range_end=100)
+    )
+
+    content = {'linechart_data': line.dump_options(),
+               'equipment': equipment,
+               'session': request.session, 'page_equipment': True}
+    return render(request, 'equipment/index.html', content)
+
+
+def modify_equipment(request, id):
+    if not request.session.get('is_login', None):
+        return redirect('/account/login/')
+
+    equipment = Equipment.objects.filter(
+        id=id)[0] if Equipment.objects.filter(id=id) else None
+
+    response = {
+        'Code': '000',
+        'Message': '未知错误！'
+    }
+
+    if not equipment:
+        response['Code'] = '101'
+        response['Message'] = '未找到该设备！'
+        return HttpResponse(json.dumps(response))
+
+    if request.method == 'GET':
+        name = request.GET.get('name', None)
+        descript = request.GET.get('descript', None)
+        is_changed = True
         if name != equipment.name:
             if Equipment.objects.filter(name=name):
-                message = '该设备名已存在'
+                response['Code'] = '102'
+                response['Message'] = '该设备已存在！'
                 is_changed = False
-
         if is_changed:
             equipment.name = name
             equipment.descript = descript
             equipment.save()
-            message = '保存成功！' if message == '' else message
-
-    content = {'equipment': equipment, 'message': message,
-               'session': request.session, 'page_equipment': True}
-    return render(request, 'equipment/index.html', content)
+            response['Code'] = 'ok'
+            response['Message'] = '保存成功！'
+    return HttpResponse(json.dumps(response))
 
 
 def list_data(request, id):
