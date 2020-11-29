@@ -6,6 +6,7 @@ from django.conf import settings
 from polls.models import Equipment, Data
 from account.models import User
 import datetime
+import json
 from django.core.paginator import Paginator
 
 every_page_equipment = 9
@@ -204,34 +205,45 @@ def create_equipment(request):
 
 
 def submit(request):
-    message = ''
+    response = {
+        'Code': '',
+        'Message': '',
+        'RequestKey': ''
+    }
     if request.method == "GET":
         key = request.GET.get('key')
+        response['RequestKey'] = key
         try:
             value = float(request.GET.get('value'))
         except:
             # 错误101, 上传的数据为空或不为数字。
-            message = '101'
-            return HttpResponse(message)
+            response['Code'] = '101'
+            response['Message'] = '上传的数据为空或不为数字'
+            return HttpResponse(json.dump(response))
         descript = request.GET.get('descript')
         equipment = Equipment.objects.filter(
             key=key)[0] if Equipment.objects.filter(key=key) else None
         if not equipment:
             # 错误102, 找不到该key的设备。
-            message = '102'
+            response['Code'] = '102'
+            response['Message'] = '找不到该key的设备'
         else:
             Data.objects.create(
                 value=value, equipment=equipment, descript=descript)
-            message = 'ok'
+            response['Code'] = 'ok'
+            response['Message'] = '上传成功'
 
-    return HttpResponse(message)
+    return HttpResponse(json.dumps(response))
 
 
 def add_equipment(request):
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
 
-    message = ''
+    response = {
+        'Code': '',
+        'Message': '',
+    }
     if request.method == "GET":
         name = request.GET.get('name')
         username = request.session.get('username', None)
@@ -242,27 +254,33 @@ def add_equipment(request):
         action = request.GET.get('action')
         if not equipment:
             # 101错误为找不到该设备
-            message = '101'
+            response['Code'] = '101'
+            response['Message'] = '找不到该设备'
         elif not user:
             # 102错误为找不到账号
-            message = '102'
+            response['Code'] = '102'
+            response['Message'] = '找不到账号'
 
         elif action == 'add':
             if user in equipment.user.all():
                 # 103错误为该账号已在设备中
-                message = '103'
+                response['Code'] = '103'
+                response['Message'] = '该账号已在设备中'
             else:
                 equipment.user.add(user)
-                message = 'ok'
+                response['Code'] = 'ok'
+                response['Message'] = '添加设备"{}"成功'.format(name)
         elif action == 'remove':
             if not user in equipment.user.all():
                 # 104错误为该账号不在设备中
-                message = '104'
+                response['Code'] = '104'
+                response['Message'] = '该账号不在设备中'
             else:
                 equipment.user.remove(user)
-                message = 'ok'
+                response['Code'] = 'ok'
+                response['Message'] = '移除设备"{}"成功'.format(name)
         else:
             # 105错误为不明action
-            message = '105'
-
-    return HttpResponse(message)
+            response['Code'] = '105'
+            response['Message'] = '不明action'
+    return HttpResponse(json.dumps(response))
