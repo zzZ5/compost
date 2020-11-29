@@ -4,14 +4,16 @@
         <div class="card">
             <div class="card-body"> 
               <h5 class="card-title"><a href="{% url 'equipment:index' equipment.id %}">{{ equipment.name }}</a> 
-                <a href="#">
+                <a href="#" style="position: relative; float: right;">
+                  <div class="spinner-border spinner-border-sm {{ equipment.name }}" style="display: none;" role="status">
+                  </div>
                 {% if equipment.add %}
                   <i class="icon iconfont iconjiatianjiakuangxuanduoxuan-8 addEquipment" name="{{ equipment.name }}"
-                  style="position: relative; float: right;" data-toggle="tooltip" title="添加到我的设备">
+                   data-toggle="tooltip" title="添加到我的设备">
                   </i>
                 {% else %}
                   <i class="icon iconfont iconjian1 addEquipment"  name="{{ equipment.name }}"
-                  style="position: relative; float: right;" data-toggle="tooltip" title="从我的设备移除">
+                   data-toggle="tooltip" title="从我的设备移除">
                   </i>
                 {% endif %}
                 </a>  
