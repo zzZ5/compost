@@ -1,6 +1,10 @@
-from django.shortcuts import render, Http404, redirect
+from django.shortcuts import render, Http404, redirect, HttpResponse
 from polls.models import Equipment
 from django.core.paginator import Paginator
+import csv
+from django.http import StreamingHttpResponse
+import codecs
+import time
 
 every_page_data = 100
 
@@ -47,6 +51,7 @@ def list_data(request, id):
 
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
+
     equipment = Equipment.objects.filter(
         id=id)[0] if Equipment.objects.filter(id=id) else None
 
@@ -65,3 +70,42 @@ def list_data(request, id):
     content = {'session': request.session, 'equipment': equipment,
                'page_list_data': True, 'datas': paginator.page(current_page), 'paginator': paginator.page(current_page)}
     return render(request, 'equipment/page_list_data.html', content)
+
+
+class Echo:
+    """An object that implements just the write method of the file-like
+    interface.
+    """
+
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
+
+
+def download_data(request, id):
+    """A view that streams a large CSV file."""
+    # Generate a sequence of rows. The range is based on the maximum number of
+    # rows that can be handled by a single sheet in most spreadsheet
+    # applications.
+    if not request.session.get('is_login', None):
+        return redirect('/account/login/')
+
+    equipment = Equipment.objects.filter(
+        id=id)[0] if Equipment.objects.filter(id=id) else None
+
+    if not equipment:
+        return Http404
+
+    datas = equipment.data_set.all()
+
+    rows = ([data.value, data.created_time.strftime('%Y-%m-%d %H:%M:%S')]
+            for data in datas)
+
+    pseudo_buffer = Echo()
+    writer = csv.writer(pseudo_buffer)
+    writer.writerow(['value', 'created_time'])
+    response = StreamingHttpResponse((writer.writerow(row) for row in rows),
+                                     content_type="text/csv")
+    response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(
+        equipment.name)
+    return response

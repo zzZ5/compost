@@ -8,7 +8,7 @@
               </button>
             </div>
       {% endif %}
-        <h4 class="card-title">{{ equipment.name }}</h4>
+        <h4 class="card-title">{{ equipment.name }} </h4><a href="{% url 'equipment:download_data' equipment.id %}" style="position: relative; float: right;"> <p class="text-muted">下载全部数据</p></a>
         <table class="table table-md">
             <thead>
                 <tr>
