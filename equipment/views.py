@@ -25,7 +25,7 @@ def index(request, id):
     if not equipment:
         return Http404
 
-    datas = equipment.data_set.all()
+    datas = equipment.data_set.all()[:100][::-1]
     dates = list(data.created_time.strftime('%Y-%m-%d %H:%M:%S')
                  for data in datas)
     values = list(data.value for data in datas)
@@ -44,7 +44,7 @@ def index(request, id):
             "dataView": {}
 
         },),
-        yaxis_opts=opts.AxisOpts(name=''),
+        yaxis_opts=opts.AxisOpts(name='最新100条数据'),
         tooltip_opts=opts.TooltipOpts(True, trigger="axis"),
         datazoom_opts=opts.DataZoomOpts(True, range_start=0, range_end=100)
     )
