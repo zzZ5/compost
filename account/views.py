@@ -126,7 +126,7 @@ def index(request):
         uid = request.session.get('uid', None)
         username = request.POST.get('username')
         email = request.POST.get('email')
-        user = User.objects.get(pk=uid)
+        user = User.objects.get(id=uid)
         is_changed = True
 
         if username != user.username:
