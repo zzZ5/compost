@@ -4,7 +4,7 @@
         <div class="card">
             <div class="card-body"> 
               <h5 class="card-title"><a href="{% url 'equipment:index' equipment.id %}">{{ equipment.name }}</a> 
-                <a href="#" style="position: relative; float: right;">
+                <a href="javascript:void(0)" style="position: relative; float: right;">
                   <div class="spinner-border spinner-border-sm {{ equipment.name }}" style="display: none;" role="status">
                   </div>
                 {% if equipment.add %}
