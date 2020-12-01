@@ -1,28 +1,33 @@
-
 <div class="card text-left">
-    <div class="card-body">
-      <div  id="message_modify_equipment" style="display: none;" class="alert alert-warning alert-dismissible fade show" role="alert">
-        保存成功！
-        <button type="button" class="close" onclick="$('#message_modify_equipment').hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <h3 class="card-title mb-5">设备信息</h3>
-      <form id="form_modify_equipment">
-        <div class="form-group row">
-          <label for="name" class="col-md-2 col-form-label">设备名：</label>
-            <div class="col-md-6">
-            <input name='name' type="text" class="form-control" id="name" value="{{ equipment.name }}">
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="descript" class="col-md-2 col-form-label">descript：</label>
-            <div class="col-md-8">
-            <textarea name="descript" class="form-control" id="descript" rows="5">{{ equipment.descript }}</textarea>
-          </div>
-        </div>
-        <button type="button" id="button_modify_equipment" class="btn btn-outline-primary btn-sm mt-2">保存</button>
-      </form>
-  
+  <div class="card-body">
+    <div id="message_modify_equipment" style="display: none;" class="alert alert-warning alert-dismissible fade show"
+      role="alert">
+      保存成功！
+      <button type="button" class="close" onclick="$('#message_modify_equipment').hide()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
+    <div class="card-title mb-5">
+      <h3><i class="icon iconfont iconchanpinxinxi"></i> 设备信息</h3>
+      <a href="{% url 'equipment:list_data' equipment.id %}" style="position: relative; float: right;">
+        <p class="text-muted"><i class="icon iconfont iconshuju"></i> 查看全部数据</p>
+      </a>
+    </div>
+    <form id="form_modify_equipment">
+      <div class="form-group row">
+        <label for="name" class="col-md-2 col-form-label">设备名：</label>
+        <div class="col-md-6">
+          <input name='name' type="text" class="form-control" id="name" value="{{ equipment.name }}">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="descript" class="col-md-2 col-form-label">descript：</label>
+        <div class="col-md-8">
+          <textarea name="descript" class="form-control" id="descript" rows="5">{{ equipment.descript }}</textarea>
+        </div>
+      </div>
+      <button type="button" id="button_modify_equipment" class="btn btn-outline-primary btn-sm mt-2">保存</button>
+    </form>
+
   </div>
+</div>

@@ -1,47 +1,50 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Compost Lab</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    {% load static %}
-    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
-    <link href="{% static 'polls/css/bootstrap.min.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="https://at.alicdn.com/t/font_2210058_abvzs808sjj.css">
-    <link rel="stylesheet" href="{% static 'polls/css/style.css' %}"> 
-    {% block link %} {% endblock link %}
-  </head>
-  <body class="bg-white">
 
-      {% block navbar %} 
-      {% include "polls/includes/navbar.html" %}
-      {% endblock navbar %}
-      <div class="page-content">
-        <div class="row">          
-          {% block account %} {% endblock account %}
-        </div>
-        <div class="row">
-          <div class="col-md-2">
-              {% block list_operation %} {% endblock list_operation %}
-          </div>
-          <div class="col-md-10">
-            {% block show_content %} {% endblock show_content %}            
-            {% block paginator %} {% endblock paginator %}      
-          </div>
-        </div>
-      </div>  
-      <footer>
-        <div class="container">
-        
-           <div class="copy text-center">
-              Copyright 2020 <a href='#'>Compost Lab v0.8</a>
-           </div>
-           
-        </div>
-     </footer>
-      
-    <script src="{% static 'polls/js/jquery.min.js' %}"></script>
-    <script src="{% static 'polls/js/bootstrap.min.js' %}"></script>
-    {% block script %} {% endblock script %}
-  </body>
+<head>
+  <title>Compost Lab</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  {% load static %}
+  <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+  <link href="{% static 'polls/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_2210058_9zhno0dsmw7.css">
+  <link rel="stylesheet" href="{% static 'polls/css/style.css' %}">
+  {% block link %} {% endblock link %}
+</head>
+
+<body class="bg-white">
+
+  {% block navbar %}
+  {% include "polls/includes/navbar.html" %}
+  {% endblock navbar %}
+  <div class="page-content">
+    <div class="row">
+      {% block account %} {% endblock account %}
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        {% block list_operation %} {% endblock list_operation %}
+      </div>
+      <div class="col-md-10">
+        {% block show_content %} {% endblock show_content %}
+        {% block paginator %} {% endblock paginator %}
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="container">
+
+      <div class="copy text-center">
+        Copyright 2020 <a href='#'>Compost Lab v0.8</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="{% static 'polls/js/jquery.min.js' %}"></script>
+  <script src="{% static 'polls/js/bootstrap.min.js' %}"></script>
+  {% block script %} {% endblock script %}
+</body>
+
 </html>

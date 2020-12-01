@@ -1,52 +1,53 @@
 <div class="card-columns">
   {% for equipment in equipments %}
-    <div class="col">
-        <div class="card">
-            <div class="card-body"> 
-              <h5 class="card-title"><a href="{% url 'equipment:index' equipment.id %}">{{ equipment.name }}</a> 
-                <a href="javascript:void(0)" style="position: relative; float: right;">
-                  <div class="spinner-border spinner-border-sm " id='{{ equipment.name }}' style="display: none;" role="status">
-                  </div>
-                {% if equipment.add %}
-                  <i class="icon iconfont iconjiatianjiakuangxuanduoxuan-8 addEquipment" name="{{ equipment.name }}"
-                   data-toggle="tooltip" title="添加到我的设备">
-                  </i>
-                {% else %}
-                  <i class="icon iconfont iconjian1 addEquipment"  name="{{ equipment.name }}"
-                   data-toggle="tooltip" title="从我的设备移除">
-                  </i>
-                {% endif %}
-                </a>  
-              </h5>
-              <p class="card-text">{{ equipment.descript }}</p>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>数据</th>
-                    <th>描述</th>
-                    <th>时间</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for data in equipment.datas %}
-                  <tr>
-                    <td>{{ data.value }}</td>
-                    <td>{{ data.descript }}</td>
-                    <td>{{ data.created_time }}</td>
-                  </tr>
-                  {% endfor %}
-                  <tr>
-                    <td><a href="{% url 'equipment:list_data' equipment.id %}">......</a></td>
-                  </tr>
-                </tbody>
-              </table>
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"><a href="{% url 'equipment:index' equipment.id %}">{{ equipment.name }}</a>
+          <a href="javascript:void(0)" style="position: relative; float: right;">
+            <div class="spinner-border spinner-border-sm " id='{{ equipment.name }}' style="display: none;"
+              role="status">
             </div>
-            {% if equipment.interval %}
-            <div class="card-footer">
-              <small class="text-muted">最后一次更新距现在{{ equipment.interval }}</small>
-            </div>
+            {% if equipment.add %}
+            <i class="icon iconfont iconjiatianjiakuangxuanduoxuan-8 addEquipment" name="{{ equipment.name }}"
+              data-toggle="tooltip" title="添加到我的设备">
+            </i>
+            {% else %}
+            <i class="icon iconfont iconjian1 addEquipment" name="{{ equipment.name }}" data-toggle="tooltip"
+              title="从我的设备移除">
+            </i>
             {% endif %}
-          </div>
+          </a>
+        </h5>
+        <p class="card-text">{{ equipment.descript }}</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>数据</th>
+              <th>描述</th>
+              <th>时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for data in equipment.datas %}
+            <tr>
+              <td>{{ data.value|floatformat:1 }}</td>
+              <td>{{ data.descript }}</td>
+              <td>{{ data.created_time }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+              <td><a href="{% url 'equipment:list_data' equipment.id %}">......</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {% if equipment.interval %}
+      <div class="card-footer">
+        <small class="text-muted">最后一次更新距现在{{ equipment.interval }}</small>
+      </div>
+      {% endif %}
     </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
 </div>

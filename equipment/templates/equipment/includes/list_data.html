@@ -1,36 +1,39 @@
 <div class="card">
-    <div class="card-body">
-      {% if message %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-      {% endif %}
-        <h4 class="card-title">{{ equipment.name }} </h4><a href="{% url 'equipment:download_data' equipment.id %}" style="position: relative; float: right;"> <p class="text-muted">下载全部数据</p></a>
-        <table class="table table-md">
-            <thead>
-                <tr>
-                    <th>Value</th>
-                    <th>Descript</th>
-                    <th>Created Time</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for data in datas %}
-                <tr>
-                    <td>{{ data.value|floatformat:1 }}</td>
-                    <td>{{ data.descript }}</td>
-                    <td>{{ data.created_time }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% block paginator %} 
-        {% include "polls/includes/paginator.html" %}
-        {% endblock paginator %} 
+  <div class="card-body">
+    {% if message %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
+    {% endif %}
+    <div class="card-title">
+      <h4><a href="{% url 'equipment:index' equipment.id %}">{{ equipment.name }}</a></h4>
+      <a href="{% url 'equipment:download_data' equipment.id %}" style="position: relative; float: right;">
+        <p class="text-muted"><i class="icon iconfont iconxiazai"></i> 下载全部数据</p>
+      </a>
+    </div>
+    <table class="table table-md">
+      <thead>
+        <tr>
+          <th>Value</th>
+          <th>Descript</th>
+          <th>Created Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in datas %}
+        <tr>
+          <td>{{ data.value|floatformat:1 }}</td>
+          <td>{{ data.descript }}</td>
+          <td>{{ data.created_time }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% block paginator %}
+    {% include "polls/includes/paginator.html" %}
+    {% endblock paginator %}
   </div>
-
-
+</div>
