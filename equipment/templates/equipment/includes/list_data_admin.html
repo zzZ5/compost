@@ -1,0 +1,55 @@
+<div class="card">
+    <div class="card-body">
+        {% if message %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+        <div class="card-title">
+            <h4><a href="{% url 'equipment:index' equipment.id %}">{{ equipment.name }}</a></h4>
+            <a href="{% url 'equipment:download_data' equipment.id %}" style="position: relative; float: right;">
+                <p class="text-muted"><i class="icon iconfont iconxiazai"></i> 下载全部数据</p>
+            </a>
+        </div>
+        <form action="{% url 'equipment:list_data' equipment.id %}" method="post">
+            {% csrf_token %}
+            <table class="table table-md">
+                <thead>
+                    <tr>
+                        <th>Value</th>
+                        <th>Descript</th>
+                        <th>Created Time</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in datas %}
+                    <tr>
+                        <td>{{ data.value|floatformat:1 }}</td>
+                        <td>{{ data.descript }}</td>
+                        <td>{{ data.created_time }}</td>
+                        <td>
+                            <div class="form-check form-check-inline">
+                                <input name='checkbox_data' value='{{ data.id }}' class="form-check-input"
+                                    type="checkbox" id="inlineCheckbox">
+                                <label class="form-check-label" for="inlineCheckbox">删除</label>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="row mb-3">
+                <button type="button" id="all_select" class="btn btn-sm btn-success ml-auto mr-2 ">全选</button>
+                <button type="button" id="all_unselect" class="btn btn-sm btn-warning mr-2">全不选</button>
+                <button type="submit" class="btn btn-sm btn-primary mr-5">保存</button>
+            </div>
+        </form>
+        {% block paginator %}
+        {% include "polls/includes/paginator.html" %}
+        {% endblock paginator %}
+    </div>
+</div>

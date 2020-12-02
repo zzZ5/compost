@@ -1,13 +1,16 @@
-from django.shortcuts import render, Http404, redirect, HttpResponse
-from polls.models import Equipment
-from django.core.paginator import Paginator
-import csv
-from django.http import StreamingHttpResponse
 import codecs
+import csv
+import json
 import time
+
+from django.core.paginator import Paginator
+from django.http import StreamingHttpResponse
+from django.shortcuts import render, Http404, redirect, HttpResponse
+from polls.models import Equipment, Data
+from account.models import User
+
 from pyecharts.charts import Line
 import pyecharts.options as opts
-import json
 
 every_page_data = 100
 
@@ -18,6 +21,10 @@ def index(request, id):
     """
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
+
+    uid = request.session.get('uid', None)
+    user = User.objects.filter(id=uid)[
+        0] if User.objects.filter(id=uid) else None
 
     equipment = Equipment.objects.filter(
         id=id)[0] if Equipment.objects.filter(id=id) else None
@@ -98,11 +105,19 @@ def list_data(request, id):
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
 
+    uid = request.session.get('uid', None)
+    user = User.objects.filter(id=uid)[
+        0] if User.objects.filter(id=uid) else None
+
     equipment = Equipment.objects.filter(
         id=id)[0] if Equipment.objects.filter(id=id) else None
 
     if not equipment:
         return Http404
+
+    if request.method == 'POST' and user.admin:
+        del_list = request.POST.getlist('checkbox_data')
+        Data.objects.filter(id__in=del_list).delete()
 
     try:
         current_page = int(request.GET.get(
@@ -115,7 +130,7 @@ def list_data(request, id):
 
     content = {'session': request.session, 'equipment': equipment,
                'page_list_data': True, 'datas': paginator.page(current_page), 'paginator': paginator.page(current_page)}
-    return render(request, 'equipment/page_list_data.html', content)
+    return render(request, 'equipment/page_list_data_admin.html', content)
 
 
 class Echo:
