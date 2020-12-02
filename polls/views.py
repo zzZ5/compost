@@ -9,7 +9,7 @@ import datetime
 import json
 from django.core.paginator import Paginator
 
-every_page_equipment = 9
+every_page_equipment = 12
 
 
 def _send_email(email, equipment):
@@ -113,9 +113,9 @@ def all_equipment(request):
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
 
-    username = request.session.get('username', None)
-    user = User.objects.filter(username=username)[
-        0] if User.objects.filter(username=username) else None
+    uid = request.session.get('uid', None)
+    user = User.objects.filter(id=uid)[
+        0] if User.objects.filter(id=uid) else None
 
     try:
         current_page = int(request.GET.get(
@@ -138,9 +138,9 @@ def my_equipment(request):
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
 
-    username = request.session.get('username', None)
-    user = User.objects.filter(username=username)[
-        0] if User.objects.filter(username=username) else None
+    uid = request.session.get('uid', None)
+    user = User.objects.filter(id=uid)[
+        0] if User.objects.filter(id=uid) else None
 
     try:
         current_page = int(request.GET.get(
