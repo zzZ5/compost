@@ -1,32 +1,39 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <a class="navbar-brand" href="{% url 'polls:index' %}">主页</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item {% if page_home %} active {% endif %}">
-          <a class="nav-link" href="{% url 'polls:index' %}"><i class="icon iconfont iconzhuye"></i> 主页<span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {% if page_about %} active {% endif %}" href="{% url 'polls:about' %}"><i class="icon iconfont iconguanyu"></i> 关于</a>
-        </li>
-        <li class="nav-item">
-          {% if session.is_login %}
-          <a class="nav-link {% if page_logout %} active {% endif %}" href="{% url 'account:logout' %}"> <i class="icon iconfont icontuichudenglu"></i> 登出</a>
-          {% else %}
-          <a class="nav-link {% if page_login %} active {% endif %}" href="{% url 'account:login' %}"><i class="icon iconfont icondenglu"></i> 登陆</a>
-          {% endif %}             
-        </li>
-        <li class="nav-item">
-          {% if session.is_login %}
-          <a name="" id="" class="nav-link {% if page_myaccount %} active {% endif %}" href="{% url 'account:index' %}"><i class="icon iconfont iconwodezhanghao"></i> 我的账号</a>
-          {% else %}
-          <a name="" id="" class="nav-link {% if page_register %} active {% endif %}" href="{% url 'account:register' %}"><i class="icon iconfont iconzhuce"></i> 注册</a>
-          {% endif %} 
-        </li>
-      </ul>
-    </div>
+  <a class="navbar-brand" href="{% url 'polls:index' %}">主页</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item {% if page_home %} active {% endif %}">
+        <a class="nav-link" href="{% url 'polls:index' %}"><i class="icon iconfont iconzhuye"></i> 主页<span
+            class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if page_about %} active {% endif %}" href="{% url 'polls:about' %}"><i
+            class="icon iconfont iconguanyu"></i> 关于</a>
+      </li>
+      <li class="nav-item">
+        {% if session.is_login %}
+        <a class="nav-link {% if page_logout %} active {% endif %}" href="{% url 'account:logout' %}"> <i
+            class="icon iconfont icontuichudenglu"></i> 登出</a>
+        {% else %}
+        <a class="nav-link {% if page_login %} active {% endif %}" href="{% url 'account:login' %}"><i
+            class="icon iconfont icondenglu"></i> 登陆</a>
+        {% endif %}
+      </li>
+      <li class="nav-item">
+        {% if session.is_login %}
+        <a name="" id="" class="nav-link {% if page_myaccount %} active {% endif %}" href="{% url 'account:index' %}"><i
+            class="icon iconfont iconwodezhanghao"></i> 我的账号</a>
+        {% else %}
+        <a name="" id="" class="nav-link {% if page_register %} active {% endif %}"
+          href="{% url 'account:register' %}"><i class="icon iconfont iconzhuce"></i> 注册</a>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
 </nav>
