@@ -7,6 +7,7 @@ class UserAdmin(admin.ModelAdmin):
         ('用户名',               {'fields': ['username']}),
         ('邮箱', {'fields': ['email']}),
         ('密码', {'fields': ['password']}),
+        ('管理员', {'fields': ['admin']}),
         ('邮箱确认', {'fields': ['confirmed']}),
 
     ]

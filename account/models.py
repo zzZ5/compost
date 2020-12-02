@@ -8,6 +8,7 @@ class User(models.Model):
     password = models.CharField(max_length=256)
     email = models.EmailField(unique=True)
     created_time = models.DateTimeField(auto_now_add=True)
+    admin = models.BooleanField(default=False)
     confirmed = models.BooleanField(default=False)
 
     def __str__(self):
