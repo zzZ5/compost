@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
-from django.db.models import Q
 import datetime
 import hashlib
+
+from django.conf import settings
+from django.db.models import Q
+from django.shortcuts import render, redirect
 from account import forms
 from account.models import User, ConfirmString
-from django.conf import settings
 
 ip = '118.25.108.254:80'
 
