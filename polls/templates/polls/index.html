@@ -16,6 +16,11 @@
     var chart_memory = echarts.init(document.getElementById('chart_memory'));
     chart_cpu.setOption({{ cpu_percent_options| safe }});
     chart_memory.setOption({{ virtual_memory_percent_options| safe }});
+
+    window.addEventListener("resize", function () {
+        chart_cpu.resize();
+        chart_memory.resize();
+    });
     setInterval("fetchData()", 1000);
     function fetchData() {
         $.ajax({

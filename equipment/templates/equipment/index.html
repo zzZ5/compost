@@ -6,11 +6,11 @@
 
 {% block show_content %}
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-3">
         {% include "equipment/includes/equipment_info.html" %}
     </div>
-    <div class="col-md-6">
-        <div class="card" style="height: 100%;">
+    <div class="col-md-6 mb-3">
+        <div class="card" style="height: 420px;">
             <div class="card-body" id="line-chart">
             </div>
         </div>
@@ -31,6 +31,10 @@
     var line_chart = echarts.init(document.getElementById('line-chart'));
     // 使用刚指定的配置项和数据显示图表。
     line_chart.setOption({{ linechart_data| safe }});
+
+    window.addEventListener("resize", function () {
+        line_chart.resize();
+    });
 
     $("#button_modify_equipment").click(function () {
         console.log("click");
