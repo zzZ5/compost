@@ -103,6 +103,7 @@ def index(request):
     """
     主页
     """
+    psutil.cpu_percent()
     cpu_percent = psutil.cpu_percent()
     virtual_memory_percent = psutil.virtual_memory().percent
     gauge_cpu = Gauge()
