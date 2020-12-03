@@ -11,4 +11,5 @@ urlpatterns = [
     path('listHistory/', views.list_history, name='list_history'),
     path('submit/', views.submit, name='submit'),
     path('addEquipment/', views.add_equipment, name='add_equipment'),
+    path('getServerInfo', views.get_server_info, name='get_server_info'),
 ]

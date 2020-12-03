@@ -1,13 +1,18 @@
-from django.shortcuts import render, redirect, HttpResponse
-import random
-import hashlib
-import time
-from django.conf import settings
-from polls.models import Equipment, Data
-from account.models import User
 import datetime
+import hashlib
 import json
+import random
+import time
+
+from django.conf import settings
+from django.shortcuts import render, redirect, HttpResponse
 from django.core.paginator import Paginator
+from account.models import User
+from polls.models import Equipment, Data
+
+from pyecharts import options as opts
+from pyecharts.charts import Gauge
+import psutil
 
 every_page_equipment = 12
 
@@ -98,8 +103,47 @@ def index(request):
     """
     主页
     """
-    content = {'session': request.session, 'page_home': True}
+    cpu_percent = psutil.cpu_percent()
+    virtual_memory_percent = psutil.virtual_memory().percent
+    gauge_cpu = Gauge()
+    gauge_cpu.add("", [("", cpu_percent)])
+    gauge_cpu.set_global_opts(title_opts=opts.TitleOpts(title="服务器cpu使用率"))
+    cpu_percent_options = gauge_cpu.dump_options()
+    gauge_memory = Gauge()
+    gauge_memory.add("", [("", virtual_memory_percent)])
+    gauge_memory.set_global_opts(
+        title_opts=opts.TitleOpts(title="服务器内存使用率"))
+    virtual_memory_percent_options = gauge_memory.dump_options()
+    print(cpu_percent_options)
+    content = {'session': request.session, 'page_home': True,
+               'cpu_percent_options': cpu_percent_options, 'virtual_memory_percent_options': virtual_memory_percent_options}
     return render(request, 'polls/index.html', content)
+
+
+def get_server_info(request):
+    response = {
+        'Code': '101',
+        'Message': '未知错误！',
+        'Data': {
+            'cpu_percent': '',
+            'virtual_memory_percent': ''
+        }
+    }
+
+    try:
+        cpu_percent = psutil.cpu_percent()
+        virtual_memory_percent = psutil.virtual_memory().percent
+
+        response['Code'] = 'ok'
+        response['Message'] = '获取信息成功！'
+        response['Data']['cpu_percent'] = cpu_percent
+        response['Data']['virtual_memory_percent'] = virtual_memory_percent
+
+    except Exception as e:
+        response['Code'] = '102'
+        response['Message'] = '获取信息失败！'
+
+    return HttpResponse(json.dumps(response))
 
 
 def about(request):

@@ -7,3 +7,43 @@
 {% block show_content %}
 {% include "polls/includes/main.html" %}
 {% endblock show_content %}
+
+{% block script %}
+{% load static %}
+<script src="{% static 'equipment/js/echarts.min.js' %}"></script>
+<script>
+    var chart_cpu = echarts.init(document.getElementById('chart_cpu'));
+    var chart_memory = echarts.init(document.getElementById('chart_memory'));
+    chart_cpu.setOption({{ cpu_percent_options| safe }});
+    chart_memory.setOption({{ virtual_memory_percent_options| safe }});
+    setInterval("fetchData()", 1000);
+    function fetchData() {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'polls:get_server_info' %}",
+            dataType: 'JSON',
+            success: function (result) {
+                console.log(result)
+                if (result['Code'] == 'ok') {
+                    chart_cpu.setOption({
+                        series: [{
+                            name: 'cpu',
+                            type: 'gauge',
+                            data: [result['Data']['cpu_percent']]
+                        }]
+                    });
+                    chart_memory.setOption({
+                        series: [{
+                            name: 'memory',
+                            type: 'gauge',
+                            data: [result['Data']['virtual_memory_percent']]
+                        }]
+                    });
+                } else {
+                    alert("error: " + result['Code'] + '\n' + result['Message']);
+                }
+            }
+        });
+    }
+</script>
+{% endblock script %}
