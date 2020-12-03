@@ -114,7 +114,6 @@ def index(request):
     gauge_memory.set_global_opts(
         title_opts=opts.TitleOpts(title="服务器内存使用率"))
     virtual_memory_percent_options = gauge_memory.dump_options()
-    print(cpu_percent_options)
     content = {'session': request.session, 'page_home': True,
                'cpu_percent_options': cpu_percent_options, 'virtual_memory_percent_options': virtual_memory_percent_options}
     return render(request, 'polls/index.html', content)
