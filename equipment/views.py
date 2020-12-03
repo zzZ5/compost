@@ -55,16 +55,20 @@ def index(request, id):
         tooltip_opts=opts.TooltipOpts(True, trigger="axis"),
         datazoom_opts=opts.DataZoomOpts(True, range_start=0, range_end=100)
     )
-
+    is_admin = user.admin
     content = {'linechart_data': line.dump_options(),
                'equipment': equipment,
-               'session': request.session, 'page_equipment': True}
+               'session': request.session, 'page_equipment': True, 'admin': is_admin}
     return render(request, 'equipment/index.html', content)
 
 
 def modify_equipment(request, id):
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
+
+    uid = request.session.get('uid', None)
+    user = User.objects.filter(id=uid)[
+        0] if User.objects.filter(id=uid) else None
 
     equipment = Equipment.objects.filter(
         id=id)[0] if Equipment.objects.filter(id=id) else None
@@ -87,6 +91,10 @@ def modify_equipment(request, id):
             if Equipment.objects.filter(name=name):
                 response['Code'] = '102'
                 response['Message'] = '该设备已存在！'
+                is_changed = False
+            elif not user.admin:
+                response['Code'] = '103'
+                response['Message'] = '权限不足！'
                 is_changed = False
         if is_changed:
             equipment.name = name
