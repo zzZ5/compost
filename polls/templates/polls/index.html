@@ -12,37 +12,54 @@
 {% load static %}
 <script src="{% static 'equipment/js/echarts.min.js' %}"></script>
 <script>
-    var chart_cpu = echarts.init(document.getElementById('chart_cpu'));
-    var chart_memory = echarts.init(document.getElementById('chart_memory'));
-    chart_cpu.setOption({{ cpu_percent_options| safe }});
-    chart_memory.setOption({{ virtual_memory_percent_options| safe }});
-
-    window.addEventListener("resize", function () {
-        chart_cpu.resize();
-        chart_memory.resize();
-    });
-    setInterval("fetchData()", 1000);
     function fetchData() {
         $.ajax({
             type: "GET",
+            axisLabel: {
+                show: false
+            },
+            detail: {
+                textStyle: {
+                    color: '#ff4500'
+                },
+                formatter: '{value}%'
+            },
             url: "{% url 'polls:get_server_info' %}",
             dataType: 'JSON',
             success: function (result) {
                 console.log(result)
                 if (result['Code'] == 'ok') {
-                    chart_cpu.setOption({
+                    chart_gauge.setOption({
                         series: [{
-                            name: 'cpu',
+                            name: 'CPU',
                             type: 'gauge',
-                            data: [result['Data']['cpu_percent']]
-                        }]
-                    });
-                    chart_memory.setOption({
-                        series: [{
-                            name: 'memory',
+                            center: ['50%', '55%'],
+                            radius: '60%',
+                            title: {
+                                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                                fontWeight: 'bolder',
+                                fontSize: 20,
+                                offsetCenter: [0, '-25%'],
+                                fontStyle: 'italic'
+                            },
+                            detail: { offsetCenter: [0, '30%'], formatter: '{value}%', fontWeight: 'bolder' },
+                            data: [{ value: result['Data']['cpu_percent'], name: 'CPU' }]
+                        },
+                        {
+                            name: 'Virtual Memory',
                             type: 'gauge',
-                            data: [result['Data']['virtual_memory_percent']]
-                        }]
+                            radius: '100%',
+                            title: {
+                                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                                fontWeight: 'bolder',
+                                fontSize: 14,
+                                offsetCenter: [0, '-58%'],
+                                fontStyle: 'italic'
+                            },
+                            detail: { offsetCenter: [0, '70%'], formatter: '{value}%', fontWeight: 'bolder' },
+                            data: [{ value: result['Data']['virtual_memory_percent'], name: 'Virtual Memroy' }]
+                        }
+                        ]
                     });
                 } else {
                     alert("error: " + result['Code'] + '\n' + result['Message']);
@@ -50,5 +67,11 @@
             }
         });
     }
+    var chart_gauge = echarts.init(document.getElementById('chart_gauge'));
+    window.addEventListener("resize", function () {
+        chart_gauge.resize();
+    });
+    fetchData()
+    setInterval("fetchData()", 1000);
 </script>
 {% endblock script %}

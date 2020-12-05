@@ -106,17 +106,11 @@ def index(request):
     psutil.cpu_percent()
     cpu_percent = psutil.cpu_percent()
     virtual_memory_percent = psutil.virtual_memory().percent
-    gauge_cpu = Gauge()
-    gauge_cpu.add("", [("", cpu_percent)])
-    gauge_cpu.set_global_opts(title_opts=opts.TitleOpts(title="服务器cpu使用率"))
-    cpu_percent_options = gauge_cpu.dump_options()
-    gauge_memory = Gauge()
-    gauge_memory.add("", [("", virtual_memory_percent)])
-    gauge_memory.set_global_opts(
-        title_opts=opts.TitleOpts(title="服务器内存使用率"))
-    virtual_memory_percent_options = gauge_memory.dump_options()
+    gauge = Gauge()
+    gauge.add("", [("cpu", cpu_percent), ("memory", cpu_percent)])
+    gauge_options = gauge.dump_options()
     content = {'session': request.session, 'page_home': True,
-               'cpu_percent_options': cpu_percent_options, 'virtual_memory_percent_options': virtual_memory_percent_options}
+               'gauge_options': gauge_options, }
     return render(request, 'polls/index.html', content)
 
 
@@ -215,6 +209,9 @@ def list_history(request):
 def create_equipment(request):
     if not request.session.get('is_login', None):
         return redirect('/account/login/')
+    uid = request.session.get('uid', None)
+    user = User.objects.filter(id=uid)[
+        0] if User.objects.filter(id=uid) else None
 
     message = ''
     if request.method == "POST":
@@ -222,7 +219,9 @@ def create_equipment(request):
         descript = request.POST.get('descript')
         same_name = Equipment.objects.filter(
             name=name)[0] if Equipment.objects.filter(name=name) else None
-        if same_name:
+        if not user.admin:
+            message = '权限过低，无法创建!'
+        elif same_name:
             message = '设备名已经存在!'
         elif not name:
             message = '设备名不能为空'
