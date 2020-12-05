@@ -103,14 +103,7 @@ def index(request):
     """
     主页
     """
-    psutil.cpu_percent()
-    cpu_percent = psutil.cpu_percent()
-    virtual_memory_percent = psutil.virtual_memory().percent
-    gauge = Gauge()
-    gauge.add("", [("cpu", cpu_percent), ("memory", cpu_percent)])
-    gauge_options = gauge.dump_options()
-    content = {'session': request.session, 'page_home': True,
-               'gauge_options': gauge_options, }
+    content = {'session': request.session, 'page_home': True, }
     return render(request, 'polls/index.html', content)
 
 
