@@ -225,7 +225,7 @@ def change_password(request):
 
     content = {'message': message,
                'session': request.session, 'page_myaccount': True}
-    return render(request, 'account/changepassword.html', content)
+    return render(request, 'account/change_password.html', content)
 
 
 def register(request):
