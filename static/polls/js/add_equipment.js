@@ -1,4 +1,4 @@
-$(".addEquipment").click(function (){
+$(".add_equipment").click(function (){
     console.log("click");
     var add_equipment = $(this);
     var data = {name:add_equipment.attr("name")};
@@ -10,7 +10,7 @@ $(".addEquipment").click(function (){
         data["action"] = 'add'
     }
     $.ajax({
-        url: "/addEquipment/",
+        url: "/add_equipment/",
         method: 'GET',
         dataType: 'JSON',
         data: data,
