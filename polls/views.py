@@ -109,7 +109,7 @@ def index(request):
 
 def get_server_info(request):
     response = {
-        'Code': '101',
+        'Code': 0,
         'Message': '未知错误！',
         'Data': {
             'cpu_percent': '',
@@ -121,13 +121,13 @@ def get_server_info(request):
         cpu_percent = psutil.cpu_percent()
         virtual_memory_percent = psutil.virtual_memory().percent
 
-        response['Code'] = 'ok'
+        response['Code'] = 100
         response['Message'] = '获取信息成功！'
         response['Data']['cpu_percent'] = cpu_percent
         response['Data']['virtual_memory_percent'] = virtual_memory_percent
 
     except Exception as e:
-        response['Code'] = '102'
+        response['Code'] = 121
         response['Message'] = '获取信息失败！'
 
     return HttpResponse(json.dumps(response))
@@ -242,7 +242,7 @@ def create_equipment(request):
 
 def submit(request):
     response = {
-        'Code': '',
+        'Code': 0,
         'Message': '',
         'RequestKey': ''
     }
@@ -253,7 +253,7 @@ def submit(request):
             value = float(request.GET.get('value'))
         except:
             # 错误101, 上传的数据为空或不为数字。
-            response['Code'] = '101'
+            response['Code'] = 131
             response['Message'] = '上传的数据为空或不为数字'
             return HttpResponse(json.dump(response))
         descript = request.GET.get('descript')
@@ -261,11 +261,12 @@ def submit(request):
             key=key)[0] if Equipment.objects.filter(key=key) else None
         if not equipment:
             # 错误102, 找不到该key的设备。
-            response['Code'] = '102'
+            response['Code'] = 111
             response['Message'] = '找不到该key的设备'
         else:
             Data.objects.create(
                 value=value, equipment=equipment, descript=descript)
+            # TODO 更改该状态码
             response['Code'] = 'ok'
             response['Message'] = '上传成功'
 
@@ -277,7 +278,7 @@ def add_equipment(request):
         return redirect('/account/login/')
 
     response = {
-        'Code': '',
+        'Code': 0,
         'Message': '',
     }
     if request.method == "GET":
@@ -290,33 +291,34 @@ def add_equipment(request):
         action = request.GET.get('action')
         if not equipment:
             # 101错误为找不到该设备
-            response['Code'] = '101'
+            response['Code'] = 111
             response['Message'] = '找不到该设备'
         elif not user:
             # 102错误为找不到账号
-            response['Code'] = '102'
+            response['Code'] = 101
             response['Message'] = '找不到账号'
 
         elif action == 'add':
             if user in equipment.user.all():
                 # 103错误为该账号已在设备中
-                response['Code'] = '103'
+                response['Code'] = 103
                 response['Message'] = '该账号已在设备中'
             else:
                 equipment.user.add(user)
-                response['Code'] = 'ok'
+                response['Code'] = 100
                 response['Message'] = '添加设备"{}"成功'.format(name)
         elif action == 'remove':
             if not user in equipment.user.all():
-                # 104错误为该账号不在设备中
-                response['Code'] = '104'
+                # 104错误为该账号
+                # 不在设备中
+                response['Code'] = 104
                 response['Message'] = '该账号不在设备中'
             else:
                 equipment.user.remove(user)
-                response['Code'] = 'ok'
+                response['Code'] = 100
                 response['Message'] = '移除设备"{}"成功'.format(name)
         else:
             # 105错误为不明action
-            response['Code'] = '105'
+            response['Code'] = 131
             response['Message'] = '不明action'
     return HttpResponse(json.dumps(response))

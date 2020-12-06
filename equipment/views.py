@@ -74,12 +74,12 @@ def modify_equipment(request, id):
         id=id)[0] if Equipment.objects.filter(id=id) else None
 
     response = {
-        'Code': '000',
+        'Code': 0,
         'Message': '未知错误！'
     }
 
     if not equipment:
-        response['Code'] = '101'
+        response['Code'] = 111
         response['Message'] = '未找到该设备！'
         return HttpResponse(json.dumps(response))
 
@@ -89,24 +89,24 @@ def modify_equipment(request, id):
         is_changed = True
         if name != equipment.name:
             if Equipment.objects.filter(name=name):
-                response['Code'] = '102'
+                response['Code'] = 112
                 response['Message'] = '该设备已存在！'
                 is_changed = False
             elif not user.admin:
-                response['Code'] = '103'
+                response['Code'] = 102
                 response['Message'] = '权限不足！'
                 is_changed = False
         if is_changed:
             equipment.name = name
             equipment.descript = descript
             equipment.save()
-            response['Code'] = 'ok'
+            response['Code'] = 100
             response['Message'] = '保存成功！'
     return HttpResponse(json.dumps(response))
 
 
 def list_data(request, id):
-    """
+    """/;
     数据页面
     """
 
