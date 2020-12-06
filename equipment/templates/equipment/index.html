@@ -46,7 +46,7 @@
             data: $("#form_modify_equipment").serialize(),
             success: function (result, status) {
                 console.log(result);
-                if (result['Code'] == 'ok') {
+                if (result['Code'] == '100') {
                     message_modify_equipment.show().delay(1000).hide(500)
                 } else {
                     alert("error: " + result['Code'] + '\n' + result['Message']);
