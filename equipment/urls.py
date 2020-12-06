@@ -5,6 +5,6 @@ app_name = 'equipment'
 urlpatterns = [
     path('<id>/', views.index, name='index'),
     path('<id>/datas/', views.list_data, name='list_data'),
-    path('<id>/modifyEquipment/', views.modify_equipment, name='modify_equipment'),
+    path('<id>/modify_equipment/', views.modify_equipment, name='modify_equipment'),
     path('<id>/download/', views.download_data, name='download_data')
 ]
