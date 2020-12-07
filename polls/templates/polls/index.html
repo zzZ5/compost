@@ -27,41 +27,117 @@
             url: "{% url 'polls:get_server_info' %}",
             dataType: 'JSON',
             success: function (result) {
-                console.log(result)
+                // console.log(result)
                 if (result['Code'] == '100') {
                     chart_gauge.setOption({
                         series: [{
-                            name: 'CPU',
-                            type: 'gauge',
-                            center: ['50%', '60%'],
-                            radius: '60%',
-                            title: {
-                                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                                fontWeight: 'bolder',
-                                fontSize: 20,
-                                offsetCenter: [0, '-25%'],
-                                fontStyle: 'italic'
-                            },
-                            detail: { offsetCenter: [0, '30%'], formatter: '{value}%', fontWeight: 'bolder' },
-                            data: [{ value: result['Data']['cpu_percent'], name: 'CPU' }]
-                        },
-                        {
-                            name: 'Virtual Memory',
-                            type: 'gauge',
                             radius: '100%',
-                            center: ['50%', '55%'],
-                            title: {
-                                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-                                fontWeight: 'bolder',
-                                fontSize: 14,
-                                offsetCenter: [0, '-58%'],
-                                fontStyle: 'italic'
+                            type: 'gauge',
+                            startAngle: 90,
+                            endAngle: -270,
+                            pointer: {
+                                show: false
                             },
-                            detail: { offsetCenter: [0, '70%'], formatter: '{value}%', fontWeight: 'bolder' },
-                            data: [{ value: result['Data']['virtual_memory_percent'], name: 'Virtual Memroy' }]
-                        }
-                        ]
-                    });
+                            progress: {
+                                show: true,
+                                overlap: false,
+                                roundCap: true,
+                                clip: false,
+                                itemStyle: {
+                                    borderWidth: 1,
+                                    borderColor: '#464646'
+                                }
+                            },
+                            axisLine: {
+
+                                lineStyle: {
+                                    width: 25
+                                }
+                            },
+                            splitLine: {
+                                show: false,
+                                distance: 0,
+                                length: 10
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                show: false,
+                                distance: 50
+                            },
+                            data: [{
+                                value: result['Data']['cpu_percent'],
+                                name: 'CPU',
+                                title: {
+                                    fontWeight: 'bolder',
+                                    offsetCenter: ['0%', '-35%']
+                                },
+                                detail: {
+                                    offsetCenter: ['0%', '-20%']
+                                }
+                            },
+                            {
+                                value: result['Data']['virtual_memory_percent'],
+                                name: 'Virtual Memory',
+                                title: {
+                                    fontWeight: 'bolder',
+                                    offsetCenter: ['0%', '10%']
+                                },
+                                detail: {
+                                    offsetCenter: ['0%', '25%']
+                                }
+                            },],
+                            title: {
+                                fontSize: 16
+                            },
+                            detail: {
+                                width: 50,
+                                height: 15,
+                                fontSize: 15,
+                                color: 'auto',
+                                borderColor: 'auto',
+                                borderRadius: 20,
+                                borderWidth: 1,
+                                formatter: '{value}%'
+                            }
+                        }]
+                    })
+
+
+                    // chart_gauge.setOption({
+                    //     series: [{
+                    //         name: 'CPU',
+                    //         type: 'gauge',
+                    //         center: ['50%', '60%'],
+                    //         radius: '60%',
+                    //         title: {
+                    //             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    //             fontWeight: 'bolder',
+                    //             fontSize: 20,
+                    //             offsetCenter: [0, '-25%'],
+                    //             fontStyle: 'italic'
+                    //         },
+                    //         detail: { offsetCenter: [0, '30%'], formatter: '{value}%', fontWeight: 'bolder' },
+                    //         data: [{ value: result['Data']['cpu_percent'], name: 'CPU' }]
+                    //     },
+                    //     {
+                    //         name: 'Virtual Memory',
+                    //         type: 'gauge',
+                    //         radius: '100%',
+                    //         center: ['50%', '55%'],
+                    //         title: {
+                    //             // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                    //             fontWeight: 'bolder',
+                    //             fontSize: 14,
+                    //             offsetCenter: [0, '-58%'],
+                    //             fontStyle: 'italic'
+                    //         },
+                    //         detail: { offsetCenter: [0, '70%'], formatter: '{value}%', fontWeight: 'bolder' },
+                    //         data: [{ value: result['Data']['virtual_memory_percent'], name: 'Virtual Memroy' }]
+                    //     }
+                    //     ]
+                    // });
                 } else {
                     alert("error: " + result['Code'] + '\n' + result['Message']);
                 }
