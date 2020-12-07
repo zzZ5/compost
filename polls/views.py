@@ -134,7 +134,8 @@ def get_server_info(request):
 
 
 def about(request):
-    detail = {'title': '关于我们', 'content': '测试文本，测试远程服务器'}
+    detail = {'title': '关于我们',
+              'content': '项目地址: <a href="https://github.com/zzZ5/compost">CompostLab</a>'}
     content = {'detail': detail,
                'session': request.session, 'page_about': True}
     return render(request, 'polls/about.html', content)

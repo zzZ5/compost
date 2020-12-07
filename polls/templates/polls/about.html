@@ -8,7 +8,7 @@
 <div class="card">
   <div class="card-body">
     <h4 class="card-title">{{ detail.title }}</h4>
-    <p class="card-text">{{ detail.content }}</p>
+    <p class="card-text">{{ detail.content|safe }}</p>
   </div>
 </div>
 {% endblock show_content %}
