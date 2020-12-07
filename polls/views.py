@@ -266,8 +266,7 @@ def submit(request):
         else:
             Data.objects.create(
                 value=value, equipment=equipment, descript=descript)
-            # TODO 更改该状态码
-            response['Code'] = 'ok'
+            response['Code'] = 100
             response['Message'] = '上传成功'
 
     return HttpResponse(json.dumps(response))
