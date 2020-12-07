@@ -42,6 +42,8 @@
 
 ## API
 
+### 登陆
+
 `POST /account/login/`
 
 请求：
@@ -67,6 +69,7 @@
 
 获取`sessionid`后才能进行后续操作
 
+### 获取服务器信息
 
 `GET /get_server_info/`
 
