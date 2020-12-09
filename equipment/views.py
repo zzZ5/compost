@@ -178,3 +178,11 @@ def download_data(request, id):
     response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(
         equipment.name)
     return response
+
+
+def get_equipment_data(request):
+
+    if request.method == 'GET':
+        name = request.GET.get('name', None)
+
+    return
