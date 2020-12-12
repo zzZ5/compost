@@ -138,7 +138,10 @@ def list_data(request, id):
 
     content = {'session': request.session, 'equipment': equipment,
                'page_list_data': True, 'datas': paginator.page(current_page), 'paginator': paginator.page(current_page)}
-    return render(request, 'equipment/page_list_data_admin.html', content)
+    if user.admin:
+        return render(request, 'equipment/page_list_data_admin.html', content)
+    else:
+        return render(request, 'equipment/page_list_data.html', content)
 
 
 class Echo:
