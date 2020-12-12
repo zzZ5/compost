@@ -309,8 +309,7 @@ def add_equipment(request):
                 response['Message'] = '添加设备"{}"成功'.format(name)
         elif action == 'remove':
             if not user in equipment.user.all():
-                # 104错误为该账号
-                # 不在设备中
+                # 104错误为该账号不在设备中
                 response['Code'] = 104
                 response['Message'] = '该账号不在设备中'
             else:
