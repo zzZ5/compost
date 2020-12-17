@@ -205,6 +205,9 @@ def get_equipment_data(request, id):
         elif action == 'three_day':
             datas = equipment.data_set.filter(
                 created_time__gt=(datetime.datetime.now() + datetime.timedelta(days=-3)))
+        elif action == 'week':
+            datas = equipment.data_set.filter(
+                created_time__gt=(datetime.datetime.now() + datetime.timedelta(days=-7)))
         elif action == 'month':
             datas = equipment.data_set.filter(
                 created_time__gt=(datetime.datetime.now() + datetime.timedelta(days=-30)))
