@@ -11,12 +11,39 @@
     </div>
     <div class="col-md-6 mb-3">
         <div class="card" style="height: 420px;">
-            <div class="card-body" id="line-chart">
+            <div class="card-body" id="line_chart_recent_data">
             </div>
         </div>
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <div class="card" style="height: 500px;">
+            <div class="card-body">
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdown_title"
+                        data-toggle="dropdown" id='dropdown_title' aria-haspopup="true" aria-expanded="false">
+                        Last Day
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-sm" id='change_action'>
+                        <a class="dropdown-item" action='day'>Last Day</a>
+                        <a class="dropdown-item" action='three_day'>Last Three Day</a>
+                        <a class="dropdown-item" action='week'>Last Week</a>
+                        <a class="dropdown-item" action='month'>Last Month</a>
+                        <a class="dropdown-item" action='three_month'>Last Three Month</a>
+                        <div class=" dropdown-divider">
+                        </div>
+                        <a class="dropdown-item" action='all'>All</a>
+                    </div>
+                </div>
+                <div id="line_chart_data" style="height: 450px;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock show_content %}
 
 {% block list_history %}
@@ -27,13 +54,96 @@
 {% load static %}
 <script src="{% static 'equipment/js/echarts.min.js' %}"></script>
 <script type="text/javascript">
-    // 基于准备好的dom，初始化echarts实例
-    var line_chart = echarts.init(document.getElementById('line-chart'));
-    // 使用刚指定的配置项和数据显示图表。
-    line_chart.setOption({{ linechart_data| safe }});
+
+    var action = 'day';
+    var line_chart_recent_data = echarts.init(document.getElementById('line_chart_recent_data'));
+    var line_chart_data = echarts.init(document.getElementById('line_chart_data'));
+    line_chart_recent_data.setOption({{ linechart_recent_data| safe }});
+    fetchData();
+
+
+    $("#change_action .dropdown-item").each(function () {
+        $(this).click(function () {
+            action = $(this).attr('action');
+            console.log(action);
+            fetchData();
+            $("#dropdown_title").text($(this).text())
+        })
+    });
+
+    function fetchData() {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'equipment:get_equipment_data' equipment.id %}",
+            data: { 'action': action },
+            dataType: 'JSON',
+            success: function (result) {
+                if (result['Code'] == '100') {
+                    console.log(result['Data'])
+                    line_chart_data.setOption({
+                        title: {
+                            text: ''
+                        },
+                        toolbox: {
+                            feature: {
+                                dataZoom: {
+                                    yAxisIndex: 'none'
+                                },
+                                restore: {},
+                                saveAsImage: {},
+                                dataView: {}
+                            }
+                        },
+                        tooltip: {
+                            trigger: 'axis',
+                            formatter: function (params) {
+                                params = params[0];
+                                return params.value[0] + ' : ' + params.value[1];
+                            },
+                            axisPointer: {
+                                animation: false
+                            }
+                        },
+                        xAxis: {
+                            type: 'time',
+                            splitLine: {
+                                show: false
+                            }
+                        },
+                        yAxis: {
+                            type: 'value',
+                            splitLine: {
+                                show: false
+                            }
+                        },
+                        dataZoom: [{
+                            type: 'inside',
+                            realtime: true,
+                            start: 0,
+                            end: 100
+                        }, {
+                            start: 0,
+                            end: 100
+                        }],
+                        series: [{
+                            name: '',
+                            type: 'line',
+                            showSymbol: false,
+                            hoverAnimation: false,
+                            data: result['Data']
+                        }]
+                    })
+                } else {
+                    alert("error: " + result['Code'] + '\n' + result['Message']);
+                }
+            }
+        });
+    }
+
 
     window.addEventListener("resize", function () {
-        line_chart.resize();
+        line_chart_recent_data.resize();
+        line_chart_data.resize()
     });
 
     $("#button_modify_equipment").click(function () {
@@ -57,5 +167,6 @@
             }
         });
     });
+
 </script>
 {% endblock script %}

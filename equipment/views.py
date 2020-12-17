@@ -1,5 +1,6 @@
 import codecs
 import csv
+import datetime
 import json
 import time
 
@@ -56,7 +57,7 @@ def index(request, id):
         datazoom_opts=opts.DataZoomOpts(True, range_start=0, range_end=100)
     )
     is_admin = user.admin
-    content = {'linechart_data': line.dump_options(),
+    content = {'linechart_recent_data': line.dump_options(),
                'equipment': equipment,
                'session': request.session, 'page_equipment': True, 'admin': is_admin}
     return render(request, 'equipment/index.html', content)
@@ -183,9 +184,37 @@ def download_data(request, id):
     return response
 
 
-def get_equipment_data(request):
+def get_equipment_data(request, id):
+
+    response = {
+        'Code': 0,
+        'Message': '未知错误！',
+        'Action': '',
+        'Data': ''
+    }
 
     if request.method == 'GET':
-        name = request.GET.get('name', None)
-
-    return
+        action = request.GET.get('action', None)
+        datas = []
+        print(action)
+        equipment = Equipment.objects.filter(
+            id=id)[0] if Equipment.objects.filter(id=id) else None
+        if action == 'day':
+            datas = equipment.data_set.filter(
+                created_time__gt=(datetime.datetime.now() + datetime.timedelta(days=-1)))
+        elif action == 'three_day':
+            datas = equipment.data_set.filter(
+                created_time__gt=(datetime.datetime.now() + datetime.timedelta(days=-3)))
+        elif action == 'month':
+            datas = equipment.data_set.filter(
+                created_time__gt=(datetime.datetime.now() + datetime.timedelta(days=-30)))
+        elif action == 'three_month':
+            datas = equipment.data_set.filter(
+                created_time__gt=(datetime.datetime.now() + datetime.timedelta(days=-90)))
+        elif action == 'all':
+            datas = equipment.data_set.all()
+        response['Code'] = 100
+        response['Message'] = '获取数据成功！'
+        response['Data'] = list({'name': data.created_time.strftime('%Y-%m-%d %H:%M:%S'),
+                                 'value': [data.created_time.strftime('%Y-%m-%d %H:%M:%S'), data.value]} for data in datas)[::-1]
+    return HttpResponse(json.dumps(response))
