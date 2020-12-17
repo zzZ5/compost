@@ -196,7 +196,6 @@ def get_equipment_data(request, id):
     if request.method == 'GET':
         action = request.GET.get('action', None)
         datas = []
-        print(action)
         equipment = Equipment.objects.filter(
             id=id)[0] if Equipment.objects.filter(id=id) else None
         if action == 'day':
