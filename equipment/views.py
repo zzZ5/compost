@@ -193,6 +193,8 @@ def get_equipment_data(request, id):
         'Data': ''
     }
 
+    is_error = False
+
     if request.method == 'GET':
         action = request.GET.get('action', None)
         datas = []
@@ -215,8 +217,27 @@ def get_equipment_data(request, id):
                 created_time__gt=(datetime.datetime.now() + datetime.timedelta(days=-90)))
         elif action == 'all':
             datas = equipment.data_set.all()
-        response['Code'] = 100
-        response['Message'] = '获取数据成功！'
-        response['Data'] = list({'name': data.created_time.strftime('%Y-%m-%d %H:%M:%S'),
-                                 'value': [data.created_time.strftime('%Y-%m-%d %H:%M:%S'), data.value]} for data in datas)[::-1]
+        elif action == 'date':
+            from_date = request.GET.get('from_date', None)
+            to_date = request.GET.get('to_date', None)
+            if (not from_date) or (not to_date):
+                response['Code'] = 141
+                response['Message'] = '未提供日期！'
+            else:
+                try:
+                    start_date = time.strftime(
+                        "%Y-%m-%d %H:%M:%S", from_date)
+                    end_date = time.strftime(
+                        "%Y-%m-%d %H:%M:%S", to_date)
+                except:
+                    response['Code'] = 142
+                    response['Message'] = '日期格式错误！'
+                datas = equipment.data_set.filter(
+                    date_time_filed__range=(start_date, end_date))
+
+        if not is_error:
+            response['Code'] = 100
+            response['Message'] = '获取数据成功！'
+            response['Data'] = list({'name': data.created_time.strftime('%Y-%m-%d %H:%M:%S'),
+                                     'value': [data.created_time.strftime('%Y-%m-%d %H:%M:%S'), data.value]} for data in datas)[::-1]
     return HttpResponse(json.dumps(response))
